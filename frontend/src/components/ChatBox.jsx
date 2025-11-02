@@ -64,7 +64,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [] }) => {
       </header>
 
       {/* Messages Area */}
-      <div 
+      <div
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-6 py-6"
         style={{ height: 'calc(100vh - 140px)' }}
@@ -78,7 +78,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [] }) => {
                 Upload your medical records and ask questions to summarize, explain, or plan your care.
               </p>
             </div>
-            
+
             {/* Suggestion Pills */}
             <div className="flex flex-wrap justify-center gap-3 pt-4">
               {suggestions.map((suggestion) => (
