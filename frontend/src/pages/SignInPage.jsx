@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
+import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png';
 
 const AUTH_ERROR_MESSAGES = {
   'auth/email-already-in-use': 'This email is already registered. Please log in instead.',
@@ -107,10 +108,7 @@ export default function SignInPage() {
         <div className="max-w-md text-center">
           {/* Logo */}
           <div className="flex items-center justify-center mb-8">
-            <div className="relative">
-              <div className="w-16 h-16 bg-teal-400 rounded-lg transform rotate-12"></div>
-              <div className="w-16 h-16 bg-purple-300 rounded-full absolute top-0 left-8"></div>
-            </div>
+            <img src={logo} alt="ClearChartAI Logo" className="w-24 h-24 object-contain" />
           </div>
 
           {/* Brand Name */}
@@ -131,7 +129,7 @@ export default function SignInPage() {
         <div className="w-full max-w-md">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-slate-700 mb-2">Create your account</h2>
-            <p className="text-slate-500">Sign up to access your medical insights</p>
+            <p className="text-slate-500">Start your journey to better health understanding</p>
           </div>
 
           {error && (
@@ -165,14 +163,14 @@ export default function SignInPage() {
           <form onSubmit={handleEmailSignIn} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="displayName">
-                Display Name
+                Full Name
               </label>
               <input
                 id="displayName"
                 type="text"
                 value={displayName}
                 onChange={(event) => setDisplayName(event.target.value)}
-                placeholder="Enter your name"
+                placeholder="Enter your full name"
                 required
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-100"
               />
@@ -258,7 +256,7 @@ export default function SignInPage() {
           <p className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{' '}
             <Link to="/login" className="font-semibold text-slate-900 underline hover:text-purple-600">
-              Log in
+              Sign In
             </Link>
           </p>
 

@@ -196,7 +196,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-100 text-slate-700 md:flex-row">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 text-slate-700 md:flex-row">
       <Sidebar onNewChat={handleNewChat} onLogout={handleLogout} user={sidebarUser} />
 
       <ChatBox
@@ -204,6 +204,7 @@ export default function DashboardPage() {
         onSend={handleSendMessage}
         isLoading={isLoading}
         suggestions={suggestionPrompts}
+        user={sidebarUser}
       />
 
       <RecordsList

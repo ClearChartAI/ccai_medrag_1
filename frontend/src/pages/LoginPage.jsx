@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
+import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png';
 
 const AUTH_ERROR_MESSAGES = {
   'auth/user-not-found': 'No account found with this email. Please sign in to create one.',
@@ -60,10 +61,7 @@ export default function LoginPage() {
         <div className="max-w-md text-center">
           {/* Logo */}
           <div className="flex items-center justify-center mb-8">
-            <div className="relative">
-              <div className="w-16 h-16 bg-teal-400 rounded-lg transform rotate-12"></div>
-              <div className="w-16 h-16 bg-purple-300 rounded-full absolute top-0 left-8"></div>
-            </div>
+            <img src={logo} alt="ClearChartAI Logo" className="w-24 h-24 object-contain" />
           </div>
 
           {/* Brand Name */}

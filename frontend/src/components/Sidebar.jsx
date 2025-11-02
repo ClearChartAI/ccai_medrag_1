@@ -1,48 +1,60 @@
 import PropTypes from 'prop-types'
 
-import { HeartPulse, Plus, Clock3, Search, Folder, FileText, StickyNote, Settings, LogOut } from 'lucide-react'
+import { MessageSquarePlus, LogOut } from 'lucide-react'
+// Commented out for future use:
+// import { Clock3, Search, Folder, FileText, StickyNote, Settings } from 'lucide-react'
+import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png'
 
 const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) => {
-  const navItems = [
-    { label: '+ New Chat', icon: Plus, action: onNewChat, highlight: false },
-    { label: 'Chat History', icon: Clock3, highlight: false },
-    { label: 'Search', icon: Search, highlight: true },
-    { label: 'Records', icon: Folder, highlight: false },
-    { label: 'Results', icon: FileText, highlight: false },
-    { label: 'Notes', icon: StickyNote, highlight: false },
-  ]
-
   return (
-    <aside className="flex h-full w-full max-w-[240px] flex-col justify-between bg-brand-gray px-6 py-6 text-slate-700">
+    <aside className="flex h-full w-full max-w-[240px] flex-col justify-between bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 px-6 py-6 text-slate-700 border-r border-teal-100">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-xl font-semibold text-slate-900">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-blue text-white">
-            <HeartPulse size={22} />
-          </div>
-          <span>ClearChartAI</span>
+          <img src={logo} alt="ClearChartAI Logo" className="h-10 w-10 object-contain" />
+          <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">ClearChartAI</span>
         </div>
+
+        {/* New Chat Button - Premium Design */}
+        <button
+          type="button"
+          onClick={onNewChat}
+          className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg transform hover:scale-105"
+        >
+          <MessageSquarePlus size={20} />
+          <span>New Chat</span>
+        </button>
+
+        {/* Future navigation items commented out */}
+        {/*
         <div className="flex flex-col gap-2">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              onClick={item.action}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${
-                item.highlight
-                  ? 'bg-brand-blue text-white shadow'
-                  : 'text-slate-600 hover:bg-white'
-              }`}
-            >
-              <item.icon size={18} />
-              <span>{item.label}</span>
-            </button>
-          ))}
+          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
+            <Clock3 size={18} />
+            <span>Chat History</span>
+          </button>
+          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
+            <Search size={18} />
+            <span>Search</span>
+          </button>
+          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
+            <Folder size={18} />
+            <span>Records</span>
+          </button>
+          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
+            <FileText size={18} />
+            <span>Results</span>
+          </button>
+          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
+            <StickyNote size={18} />
+            <span>Notes</span>
+          </button>
         </div>
+        */}
       </div>
+
       <div className="space-y-3">
         {user && (
-          <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 text-sm">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-blue/10">
+          <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 text-sm shadow-sm border border-teal-100">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-teal-200 to-cyan-200">
               {user.picture ? (
                 <img
                   src={user.picture}
@@ -52,7 +64,7 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) =
                     const element = event.currentTarget
                     element.style.display = 'none'
                     const fallback = document.createElement('span')
-                    fallback.className = 'text-lg font-semibold text-brand-blue'
+                    fallback.className = 'text-lg font-semibold text-teal-700'
                     fallback.textContent =
                       user.name?.charAt(0)?.toUpperCase() ||
                       user.email?.charAt(0)?.toUpperCase() ||
@@ -61,7 +73,7 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) =
                   }}
                 />
               ) : (
-                <span className="text-lg font-semibold text-brand-blue">
+                <span className="text-lg font-semibold text-teal-700">
                   {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || '?'}
                 </span>
               )}
@@ -72,17 +84,19 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) =
             </div>
           </div>
         )}
+        {/* Commented out Settings button for future use:
         <button
           type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm"
         >
           <Settings size={18} />
           <span>Settings</span>
         </button>
+        */}
         <button
           type="button"
           onClick={onLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-red-500 hover:bg-white"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-red-500 hover:bg-white hover:shadow-sm transition"
         >
           <LogOut size={18} />
           <span>Log out</span>
