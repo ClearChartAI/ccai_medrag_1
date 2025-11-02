@@ -1,0 +1,175 @@
+.features-unified {
+    padding: 6rem 3rem;
+    background: #FFFFFF;
+}
+
+.unified-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 5rem;
+}
+
+.unified-text {
+    flex: 1;
+    max-width: 550px;
+}
+
+.unified-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+}
+
+.unified-title {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.unified-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.unified-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.unified-list li {
+    font-size: 1.05rem;
+    color: #2a2a2a;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.unified-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #5FC4C4;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.unified-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-unified {
+    background: #FFFFFF;
+    color: #6B7A85;
+    border: 2px solid #E0E0E0;
+    padding: 0.9rem 2.2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-unified:hover {
+    border-color: #6B7A85;
+    transform: translateY(-2px);
+}
+
+.link-unified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6B7A85;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.link-unified:hover {
+    gap: 0.8rem;
+}
+
+.link-unified span {
+    transition: transform 0.3s ease;
+}
+
+.link-unified:hover span {
+    transform: translateX(4px);
+}
+
+.unified-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+    .unified-title {
+        font-size: 2.5rem;
+    }
+
+    .unified-container {
+        gap: 3rem;
+    }
+
+    .unified-visual svg {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .features-unified {
+        padding: 4rem 1.5rem;
+    }
+
+    .unified-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .unified-text {
+        max-width: 100%;
+    }
+
+    .unified-title {
+        font-size: 2.2rem;
+    }
+
+    .unified-visual svg {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .unified-title {
+        font-size: 1.8rem;
+    }
+
+    .unified-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .unified-visual svg {
+        width: 280px;
+        height: 280px;
+    }
+}

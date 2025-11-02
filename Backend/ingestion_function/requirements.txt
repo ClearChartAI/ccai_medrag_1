@@ -1,0 +1,6 @@
+google-cloud-storage
+google-cloud-documentai
+google-cloud-aiplatform
+nltk
+tiktoken
+google-cloud-firestore

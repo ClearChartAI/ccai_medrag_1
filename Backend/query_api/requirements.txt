@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+google-cloud-aiplatform
+pydantic
+python-dotenv
+google-cloud-firestore
+python-multipart
+google-auth
+google-auth-oauthlib
+firebase-admin
+python-jose[cryptography]

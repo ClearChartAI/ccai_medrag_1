@@ -1,0 +1,248 @@
+.contact-form-section {
+    padding: 4rem 3rem 6rem;
+    background: #FFFFFF;
+}
+
+.form-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 5rem;
+}
+
+.form-header {
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+}
+
+.form-title {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.form-subtitle {
+    font-size: 1.05rem;
+    color: #555;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.contact-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: #2a2a2a;
+}
+
+.contact-detail-item svg {
+    color: #6B7A85;
+    flex-shrink: 0;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2a2a2a;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.9rem 1.2rem;
+    border: 2px solid #E8E8E8;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #2a2a2a;
+    background: #FAFAFA;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #5FC4C4;
+    background: #FFFFFF;
+}
+
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23666' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 3rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group textarea::placeholder {
+    color: #999;
+}
+
+.radio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    border: 2px solid #E8E8E8;
+    border-radius: 10px;
+    background: #FAFAFA;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.radio-label:hover {
+    border-color: #D0D0D0;
+    background: #F5F5F5;
+}
+
+.radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.radio-label input[type="radio"]:checked + span {
+    font-weight: 600;
+}
+
+.radio-label:has(input[type="radio"]:checked) {
+    border-color: #5FC4C4;
+    background: rgba(95, 196, 196, 0.1);
+}
+
+.radio-label span {
+    font-size: 0.95rem;
+    color: #2a2a2a;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.form-checkbox label {
+    font-size: 0.95rem;
+    color: #555;
+    cursor: pointer;
+}
+
+.btn-submit {
+    background: #5FC4C4;
+    color: #FFFFFF;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+/* No hover state - button remains completely static */
+
+@media (max-width: 1024px) {
+    .form-title {
+        font-size: 2.5rem;
+    }
+
+    .form-container {
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-form-section {
+        padding: 3rem 1.5rem 4rem;
+    }
+
+    .form-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .form-header {
+        position: static;
+    }
+
+    .form-title {
+        font-size: 2.2rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .radio-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-title {
+        font-size: 1.8rem;
+    }
+
+    .btn-submit {
+        width: 100%;
+    }
+}

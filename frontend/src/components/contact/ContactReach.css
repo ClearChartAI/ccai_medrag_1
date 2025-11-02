@@ -1,0 +1,123 @@
+.contact-reach {
+    padding: 4rem 3rem 2rem;
+    background: #FFFFFF;
+}
+
+.reach-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    gap: 5rem;
+}
+
+.reach-text {
+    flex: 1;
+    max-width: 450px;
+}
+
+.reach-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+}
+
+.reach-title {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.reach-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+.reach-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.info-icon {
+    color: #6B7A85;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.info-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.reach-visual {
+    max-width: 1400px;
+    margin: 0 auto;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(93, 196, 196, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .reach-title {
+        font-size: 2.5rem;
+    }
+
+    .reach-container {
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-reach {
+        padding: 3rem 1.5rem 2rem;
+    }
+
+    .reach-container {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .reach-text {
+        max-width: 100%;
+    }
+
+    .reach-title {
+        font-size: 2.2rem;
+    }
+
+    .reach-visual {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .reach-title {
+        font-size: 1.8rem;
+    }
+
+    .reach-visual {
+        height: 250px;
+    }
+}

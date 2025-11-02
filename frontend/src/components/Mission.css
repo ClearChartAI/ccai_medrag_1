@@ -1,0 +1,235 @@
+.mission-section {
+    padding: 6rem 3rem;
+    background: #FFFFFF;
+}
+
+.mission-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.mission-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.mission-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.mission-title {
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.mission-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+}
+
+.mission-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.link-about,
+.link-story {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6B7A85;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.link-about {
+    padding-bottom: 2px;
+    border-bottom: 2px solid #000;
+}
+
+.link-about:hover {
+    opacity: 0.7;
+}
+
+.link-story {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: gap 0.3s ease;
+}
+
+.link-story:hover {
+    gap: 0.8rem;
+}
+
+.link-story span {
+    transition: transform 0.3s ease;
+}
+
+.link-story:hover span {
+    transform: translateX(4px);
+}
+
+.mission-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.mission-card {
+    background: #F5F9F9;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mission-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.mission-card.highlight {
+    background: linear-gradient(135deg, #5FA8A8 0%, #7DD3D3 100%);
+    color: #FFFFFF;
+}
+
+.mission-card-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mission-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mission-card.highlight .mission-card-image {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mission-card-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 0.5rem;
+    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.mission-card.highlight .mission-card-name {
+    color: #FFFFFF;
+}
+
+.mission-card-role {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.mission-card.highlight .mission-card-role {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+@media (max-width: 1024px) {
+    .mission-title {
+        font-size: 3rem;
+    }
+
+    .mission-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .mission-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .mission-title {
+        font-size: 2.5rem;
+    }
+
+    .mission-description {
+        font-size: 1rem;
+    }
+
+    .mission-links {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .mission-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .mission-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .mission-card-image {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mission-title {
+        font-size: 2rem;
+    }
+
+    .mission-description {
+        font-size: 0.95rem;
+    }
+
+    .mission-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .mission-card {
+        padding: 1.5rem;
+    }
+
+    .mission-card-image {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+
+    .mission-card-name {
+        font-size: 1.1rem;
+    }
+
+    .mission-card-role {
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,323 @@
+.about-impact {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, #E5F2F2 0%, #D0E8E7 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Timeline Mode Label */
+.timeline-mode-label {
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #666;
+    text-transform: uppercase;
+}
+
+/* Timeline Container */
+.impact-timeline {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+/* Timeline Line */
+.timeline-line {
+    position: absolute;
+    left: 275px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #E0E0E0;
+    z-index: 1;
+    display: none;
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(180deg, #5FA8A8 0%, #7DD3D3 100%);
+    box-shadow: 0 0 10px rgba(95, 168, 168, 0.5);
+    display: none;
+}
+
+/* Timeline Item */
+.timeline-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Timeline Year (now displays category) */
+.timeline-year {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #6B7A85;
+    text-align: center;
+    padding-right: 0;
+    line-height: 1.2;
+    font-style: normal;
+    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin-bottom: 1rem;
+    order: -1;
+    opacity: 1;
+    transform: none;
+}
+
+
+/* Timeline Card */
+.timeline-card {
+    border-radius: 25px;
+    padding: 2rem 2rem;
+    min-height: 320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    color: #FFFFFF;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transform: none;
+}
+
+.timeline-card:hover {
+    transform: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.impact-card {
+    border-radius: 25px;
+    padding: 3rem 2.5rem;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #FFFFFF;
+}
+
+.impact-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Impact card background orbs */
+.impact-card-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.impact-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.impact-card:hover .impact-orb {
+    opacity: 0.5;
+}
+
+.impact-orb-1 {
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.4);
+    top: -50px;
+    right: -50px;
+}
+
+.impact-orb-2 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.3);
+    bottom: -30px;
+    left: -30px;
+}
+
+.impact-card:hover .impact-orb-1 {
+    transform: translate(-10px, 10px) scale(1.1);
+}
+
+.impact-card:hover .impact-orb-2 {
+    transform: translate(10px, -10px) scale(1.1);
+}
+
+.impact-card-icon {
+    flex: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.impact-card-icon svg {
+    width: 120px;
+    height: 120px;
+}
+
+.impact-card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.impact-card-category {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    letter-spacing: 0.05em;
+}
+
+.impact-card-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.impact-card-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+}
+
+.impact-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.impact-card-link:hover {
+    gap: 0.8rem;
+}
+
+.impact-card-link span {
+    transition: transform 0.3s ease;
+}
+
+.impact-card-link:hover span {
+    transform: translateX(4px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .impact-timeline {
+        padding: 4rem 3rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .timeline-item {
+        gap: 1.5rem;
+    }
+
+    .timeline-year {
+        font-size: 1.5rem;
+    }
+
+    .timeline-card {
+        padding: 2rem 1.75rem;
+        min-height: 260px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-impact {
+        padding: 3rem 1.5rem;
+    }
+
+    .impact-timeline {
+        padding: 3rem 1.5rem;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .timeline-mode-label {
+        left: 1.5rem;
+        font-size: 0.75rem;
+    }
+
+    .timeline-item {
+        gap: 1.5rem;
+        margin-bottom: 0;
+    }
+
+    .timeline-year {
+        font-size: 1.3rem;
+        padding-right: 0;
+    }
+
+    .timeline-card {
+        padding: 1.75rem 1.5rem;
+        min-height: 240px;
+    }
+
+    .impact-card-title {
+        font-size: 1.5rem;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .impact-timeline {
+        padding: 2rem 1rem;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .timeline-item {
+        gap: 1rem;
+    }
+
+    .timeline-year {
+        font-size: 1.2rem;
+        padding-right: 0;
+    }
+
+    .timeline-card {
+        padding: 1.5rem 1.25rem;
+        min-height: 220px;
+    }
+
+    .impact-card-title {
+        font-size: 1.3rem;
+    }
+
+    .impact-card-icon svg {
+        width: 100px;
+        height: 100px;
+    }
+
+}

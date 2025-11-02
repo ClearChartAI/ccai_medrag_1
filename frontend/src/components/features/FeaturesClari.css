@@ -1,0 +1,187 @@
+.features-clari {
+    padding: 6rem 3rem;
+    background: #FFFFFF;
+}
+
+.clari-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 5rem;
+}
+
+.clari-text {
+    flex: 1;
+    max-width: 550px;
+}
+
+.clari-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+}
+
+.clari-title {
+    font-size: 3rem;
+    font-weight: 600;
+    color: #6B7A85;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.clari-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.clari-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.clari-features li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.05rem;
+    color: #2a2a2a;
+    margin-bottom: 1.2rem;
+}
+
+.clari-features li svg {
+    color: #5FC4C4;
+    flex-shrink: 0;
+}
+
+.clari-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-clari {
+    background: #FFFFFF;
+    color: #6B7A85;
+    border: 2px solid #E0E0E0;
+    padding: 0.9rem 2.2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-clari:hover {
+    border-color: #6B7A85;
+    transform: translateY(-2px);
+}
+
+.link-clari {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6B7A85;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.link-clari:hover {
+    gap: 0.8rem;
+}
+
+.link-clari span {
+    transition: transform 0.3s ease;
+}
+
+.link-clari:hover span {
+    transform: translateX(4px);
+}
+
+.clari-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brain-container {
+    background: linear-gradient(135deg, #E8F7F7 0%, #D4EEEE 100%);
+    border-radius: 30px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(93, 196, 196, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .clari-title {
+        font-size: 2.5rem;
+    }
+
+    .clari-container {
+        gap: 3rem;
+    }
+
+    .brain-container svg {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .features-clari {
+        padding: 4rem 1.5rem;
+    }
+
+    .clari-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .clari-text {
+        max-width: 100%;
+    }
+
+    .clari-title {
+        font-size: 2.2rem;
+    }
+
+    .brain-container {
+        padding: 1.5rem;
+    }
+
+    .brain-container svg {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .clari-title {
+        font-size: 1.8rem;
+    }
+
+    .clari-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .brain-container svg {
+        width: 280px;
+        height: 280px;
+    }
+}
