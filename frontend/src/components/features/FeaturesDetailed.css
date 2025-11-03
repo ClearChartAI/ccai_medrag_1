@@ -123,7 +123,7 @@
 }
 
 .detail-visual {
-    flex: 1;
+    flex: 0.85;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,12 +132,13 @@
 .detail-image-container {
     background: linear-gradient(135deg, #7DD3D3 0%, #5FA8A8 100%);
     border-radius: 30px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 15px 40px rgba(93, 196, 196, 0.25);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 400px;
+    min-height: 350px;
+    max-width: 550px;
 }
 
 .detail-image {

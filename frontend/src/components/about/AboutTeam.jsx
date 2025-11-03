@@ -4,7 +4,7 @@ import useScrollAnimation from '../../hooks/useScrollAnimation';
 import nicholasDavisImage from '../../assets/ChatGPT Image Oct 6, 2025, 04_42_46 PM.png';
 import dhruvSurajImage from '../../assets/ChatGPT Image Oct 4, 2025, 07_01_07 PM copy.png';
 import vishnuKoraganjiImage from '../../assets/vishnu-koraganji.png';
-
+import dralkhatibImage from '../../assets/Dr-Alkhatib.png';
 const AboutTeam = () => {
   const headerRef = useScrollAnimation({ threshold: 0.2 });
 
@@ -34,6 +34,15 @@ const AboutTeam = () => {
       role: 'Senior AI engineer',
       description: 'Machine learning expert creating advanced algorithms to translate medical language into patient-friendly insights',
       image: vishnuKoraganjiImage,
+      linkedin: '#',
+      twitter: '#',
+      website: '#'
+    },
+    {
+      name: 'Dr. Basil Alkhatib',
+      role: 'MD, FACC, FSCAI',
+      description: 'Clinical De-Risking Leader, Safety Oversight, GTM Network Accelerator Director-Designated',
+      image: dralkhatibImage ,
       linkedin: '#',
       twitter: '#',
       website: '#'

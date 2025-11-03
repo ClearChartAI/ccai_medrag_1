@@ -5,17 +5,17 @@ const Mission = () => {
   const teamMembers = [
     {
       name: 'Nicholas Davis',
-      role: 'Founder & CEO, AGACNP, BSN',
-      image: 'https://via.placeholder.com/200?text=Nicholas+Davis'
+      role: ' “Every day, I see how patients struggle to make sense of their records. ClearChartAI bridges that gap, giving them understanding and helping patients own their future',
+  
     },
     {
-      name: 'Dhruv Suraj',
-      role: 'Responsible for the entire tech stack, ensuring the platform is powerful, intuitive, and reliable for all users.',
+      name: 'Dr Alkhatib MD',
+      role: '“Medicine moves fast, but clarity shouldn’t be left behind. When my patients understand their data, care becomes a partnership, not a mystery',
       image: 'https://via.placeholder.com/200?text=Dhruv+Suraj'
     },
     {
-      name: 'Vishnu Koraganji',
-      role: 'Sr Full-Stack AI Engineer',
+      name: 'Jacob Pfetsch FNP',
+      role: 'Information means nothing without context. ClearChartAI translates medical language into plain, human terms, so patients can focus on what truly matters: getting better',
       image: 'https://via.placeholder.com/200?text=Vishnu+Koraganji'
     }
   ];
@@ -39,9 +39,6 @@ const Mission = () => {
         <div className="mission-cards">
           {teamMembers.map((member, index) => (
             <div key={index} className={`mission-card ${member.highlight ? 'highlight' : ''}`}>
-              <div className="mission-card-image">
-                <img src={member.image} alt={member.name} />
-              </div>
               <h3 className="mission-card-name">{member.name}</h3>
               <p className="mission-card-role">{member.role}</p>
             </div>
