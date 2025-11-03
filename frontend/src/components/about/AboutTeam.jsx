@@ -43,7 +43,7 @@ const AboutTeam = () => {
       role: 'MD, FACC, FSCAI',
       description: 'Clinical De-Risking Leader, Safety Oversight, GTM Network Accelerator Director-Designated',
       image: dralkhatibImage,
-      imagePosition: 'center top',
+      imagePosition: 'center 10%',
       linkedin: '#',
       twitter: '#',
       website: '#'
