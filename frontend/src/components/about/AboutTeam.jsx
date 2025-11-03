@@ -42,7 +42,8 @@ const AboutTeam = () => {
       name: 'Dr. Basil Alkhatib',
       role: 'MD, FACC, FSCAI',
       description: 'Clinical De-Risking Leader, Safety Oversight, GTM Network Accelerator Director-Designated',
-      image: dralkhatibImage ,
+      image: dralkhatibImage,
+      imagePosition: 'center top',
       linkedin: '#',
       twitter: '#',
       website: '#'

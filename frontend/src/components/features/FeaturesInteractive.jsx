@@ -201,7 +201,29 @@ const FeaturesInteractive = () => {
         />
       </div>
 
-
+      {/* Interactive Feature Cards */}
+      <div className="feature-cards-grid">
+        {currentFeatures.map((feature, index) => (
+          <div
+            key={index}
+            className={`feature-card ${hoveredCard === index ? 'hovered' : ''}`}
+            onMouseEnter={() => setHoveredCard(index)}
+            onMouseLeave={() => setHoveredCard(null)}
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <div className="card-glow"></div>
+            <h3 className="card-title">{feature.title}</h3>
+            <p className="card-description">{feature.description}</p>
+            <ul className="card-details">
+              {feature.details.map((detail, idx) => (
+                <li key={idx}>
+                  {detail}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
 
     </section>
   );
