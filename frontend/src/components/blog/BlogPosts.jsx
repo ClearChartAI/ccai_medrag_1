@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './BlogPosts.css';
 
+// Import images properly for Vite bundling
+import blogImg1 from '../../assets/blog-image-1.png';
+import blogImg2 from '../../assets/blog-image-2.png';
+import blogImg3 from '../../assets/blog-image-3.png';
+
 const BlogPosts = () => {
   const [observedPosts, setObservedPosts] = useState(new Set());
   const [activeGallerySlide, setActiveGallerySlide] = useState({});
@@ -16,11 +21,7 @@ const BlogPosts = () => {
       title: 'Breaking down medical jargon',
       description: 'Simple strategies to understand complex medical terminology and reports',
       slug: 'breaking-down-medical-jargon',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png'
-      ]
+      images: [blogImg1, blogImg2, blogImg3]
     },
     {
       category: 'Privacy',
@@ -30,11 +31,7 @@ const BlogPosts = () => {
       title: 'Patient data security explained',
       description: 'Essential tips for protecting your personal health information online',
       slug: 'patient-data-security-explained',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png'
-      ]
+      images: [blogImg2, blogImg3, blogImg1]
     },
     {
       category: 'AI',
@@ -44,11 +41,7 @@ const BlogPosts = () => {
       title: 'AI in healthcare innovations',
       description: 'How artificial intelligence is revolutionizing patient communication and care',
       slug: 'ai-in-healthcare-innovations',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png'
-      ]
+      images: [blogImg3, blogImg1, blogImg2]
     },
     {
       category: 'Patient Education',
@@ -58,11 +51,7 @@ const BlogPosts = () => {
       title: 'Reading your lab results with confidence',
       description: 'A comprehensive guide to interpreting common laboratory tests',
       slug: 'reading-lab-results',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png'
-      ]
+      images: [blogImg1, blogImg2, blogImg3]
     },
     {
       category: 'Wellness',
@@ -72,11 +61,7 @@ const BlogPosts = () => {
       title: 'Taking control of your health journey',
       description: 'Practical steps to become an active participant in your healthcare',
       slug: 'control-health-journey',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png'
-      ]
+      images: [blogImg2, blogImg3, blogImg1]
     },
     {
       category: 'Technology',
@@ -86,11 +71,7 @@ const BlogPosts = () => {
       title: 'Digital health records explained',
       description: 'Understanding electronic health records and how to access yours',
       slug: 'digital-health-records',
-      images: [
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
-        '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png'
-      ]
+      images: [blogImg3, blogImg1, blogImg2]
     }
   ];
 

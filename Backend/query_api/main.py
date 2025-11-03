@@ -1,5 +1,5 @@
 """FastAPI Query API for Medical RAG System."""
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi import File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -7,8 +7,21 @@ from typing import Any, Dict, List, Optional
 import os
 import uuid
 from datetime import datetime, timedelta
+import logging
+import sys
 
 from dotenv import load_dotenv
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -31,10 +44,22 @@ from auth import verify_identity_platform_token
 
 app = FastAPI(title="Medical RAG Query API")
 
+# Rate limiting
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",  # Development
+        "https://clearchartai.io",  # Production custom domain
+        "https://www.clearchartai.io",  # Production with www
+        "https://sunlit-adviser-471323-p0.web.app",  # Firebase default
+        "https://sunlit-adviser-471323-p0.firebaseapp.com",  # Firebase alternate
+        "https://clearchartai-api-459213216590.us-central1.run.app",  # Cloud Run backend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -222,7 +247,9 @@ def health_check():
 
 
 @app.post("/upload")
+@limiter.limit("20/hour")
 async def upload_document(
+    request: Request,
     file: UploadFile = File(...),
     user_info: Dict[str, Any] = Depends(verify_identity_platform_token),
 ):
@@ -231,7 +258,7 @@ async def upload_document(
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files allowed")
 
-    print(f"Uploading: {file.filename}")
+    logger.info(f"Document upload started: {file.filename}")
 
     try:
         storage_client = storage.Client(project=PROJECT_ID)
@@ -269,8 +296,7 @@ async def upload_document(
         doc_ref = db.collection("documents").document(document_id)
         doc_ref.set(document_metadata)
 
-        print(f"✓ Uploaded to GCS: {gcs_path}")
-        print("✓ Document marked as processed and ready")
+        logger.info(f"Document uploaded successfully: {document_id} - {gcs_path}")
 
         db.collection("users").document(user_id).update(
             {"document_count": firestore.Increment(1)}
@@ -338,7 +364,9 @@ async def get_document_status(
 
 
 @app.post("/query", response_model=QueryResponse)
+@limiter.limit("200/hour")
 def query_documents(
+    http_request: Request,
     request: QueryRequest,
     chat_id: Optional[str] = None,
     user_info: Dict[str, Any] = Depends(verify_identity_platform_token),
@@ -362,7 +390,7 @@ def query_documents(
     print(f" - Chat title: {chat.get('title', 'N/A')}")
     print(f" - Message count: {chat.get('message_count', 0)}")
 
-    print(f"Processing query for chat {chat_id}: {request.question}")
+    logger.info(f"Query received: {request.question[:50]}...")
 
     print("Generating query embedding...")
     query_embedding_response = embedding_model.get_embeddings([request.question])
@@ -482,7 +510,7 @@ Answer:"""
         },
     )
 
-    print(f"✓ Query completed and messages saved for chat {chat_id}")
+    logger.info(f"Query completed for chat: {chat_id}")
 
     return QueryResponse(answer=answer, sources=sources, chat_id=chat_id)
 
@@ -751,7 +779,8 @@ async def cleanup_orphaned_vectors(
 
 
 @app.post("/auth/register")
-async def register_user(request: RegisterRequest):
+@limiter.limit("5/hour")
+async def register_user(http_request: Request, request: RegisterRequest):
     """Register new user with email and password."""
 
     try:

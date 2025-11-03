@@ -4,6 +4,9 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+**/.env
+**/.env.production
 
 # Dependencies
 node_modules/
@@ -31,8 +34,18 @@ build/
 *.log
 logs/
 
-# Credentials
+# Credentials & Service Account Keys
 *.json
 !package.json
 !package-lock.json
 !tsconfig.json
+!vite.config.js
+!firebase.json
+!firestore.indexes.json
+
+# GCP Org/Project Policy Files (contain org structure)
+org-policy.yaml
+project-policy.yaml
+
+# Deployment guide
+New Text Document.txt

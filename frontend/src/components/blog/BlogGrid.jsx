@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './BlogGrid.css';
 
+// Import images properly for Vite bundling
+import blogImg1 from '../../assets/blog-image-1.png';
+import blogImg2 from '../../assets/blog-image-2.png';
+import blogImg3 from '../../assets/blog-image-3.png';
+
 const BlogGrid = () => {
   const [observedCards, setObservedCards] = useState(new Set());
   const observerRef = useRef(null);
@@ -13,7 +18,7 @@ const BlogGrid = () => {
       subtitle: 'Medical imaging breakthrough',
       category: 'Technology',
       description: 'Discover how advanced medical imaging techniques are revolutionizing diagnostic procedures and patient care with cutting-edge technology.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
+      image: blogImg1,
       slug: 'breaking-down-medical-jargon',
       readTime: '5 min read'
     },
@@ -23,7 +28,7 @@ const BlogGrid = () => {
       subtitle: 'Patient monitoring systems',
       category: 'Innovation',
       description: 'Explore the latest innovations in patient monitoring systems that provide real-time health tracking and predictive analytics.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
+      image: blogImg2,
       slug: 'patient-data-security-explained',
       readTime: '6 min read'
     },
@@ -33,7 +38,7 @@ const BlogGrid = () => {
       subtitle: 'Mental health & wellness',
       category: 'Wellness',
       description: 'Learn practical strategies for achieving optimal mental health and wellness through mindfulness and evidence-based practices.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
+      image: blogImg3,
       slug: 'control-health-journey',
       readTime: '7 min read'
     },
@@ -43,7 +48,7 @@ const BlogGrid = () => {
       subtitle: 'Deep health analytics',
       category: 'Analytics',
       description: 'Dive into the world of health analytics and discover how data-driven insights are transforming healthcare decisions.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
+      image: blogImg1,
       slug: 'ai-in-healthcare-innovations',
       readTime: '8 min read'
     },
@@ -53,7 +58,7 @@ const BlogGrid = () => {
       subtitle: 'Healthcare accessibility',
       category: 'Access',
       description: 'Understanding the importance of healthcare accessibility and how technology is breaking down barriers to quality care.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
+      image: blogImg2,
       slug: 'reading-lab-results',
       readTime: '5 min read'
     },
@@ -63,7 +68,7 @@ const BlogGrid = () => {
       subtitle: 'Data security protocols',
       category: 'Security',
       description: 'Comprehensive guide to healthcare data security protocols and best practices for protecting sensitive patient information.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
+      image: blogImg3,
       slug: 'hipaa-compliance',
       readTime: '6 min read'
     },
@@ -73,7 +78,7 @@ const BlogGrid = () => {
       subtitle: 'Mobile health solutions',
       category: 'Mobile',
       description: 'Stay connected to your health on the go with innovative mobile health solutions designed for modern lifestyles.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
+      image: blogImg1,
       slug: 'digital-health-records',
       readTime: '4 min read'
     },
@@ -83,7 +88,7 @@ const BlogGrid = () => {
       subtitle: 'Healthcare transformation',
       category: 'Future',
       description: 'Explore how emerging technologies and new paradigms are reshaping the future of healthcare delivery and patient outcomes.',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
+      image: blogImg2,
       slug: 'prescription-labels',
       readTime: '7 min read'
     }
