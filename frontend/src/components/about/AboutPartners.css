@@ -126,6 +126,12 @@
     position: relative;
 }
 
+.partner-logo-img {
+    max-width: 200px;
+    height: auto;
+    object-fit: contain;
+}
+
 @media (max-width: 1024px) {
     .partners-title {
         font-size: 2.5rem;

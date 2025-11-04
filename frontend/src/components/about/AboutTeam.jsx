@@ -4,7 +4,7 @@ import useScrollAnimation from '../../hooks/useScrollAnimation';
 import nicholasDavisImage from '../../assets/ChatGPT Image Oct 6, 2025, 04_42_46 PM.png';
 import dhruvSurajImage from '../../assets/ChatGPT Image Oct 4, 2025, 07_01_07 PM copy.png';
 import vishnuKoraganjiImage from '../../assets/vishnu-koraganji.png';
-import dralkhatibImage from '../../assets/Dr-Alkhatib.png';
+import dralkhatibImage from '../../assets/Dr-Alkhatib.jpg';
 const AboutTeam = () => {
   const headerRef = useScrollAnimation({ threshold: 0.2 });
 
