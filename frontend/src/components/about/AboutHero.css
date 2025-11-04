@@ -135,8 +135,8 @@
 .heartbeat-bpm {
     font-size: 0.85rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #333;
-    font-family: 'Courier New', monospace;
 }
 
 .about-gradient-orb {
@@ -289,7 +289,7 @@
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .kinetic-word {

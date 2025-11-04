@@ -41,56 +41,6 @@ const BlogGrid = () => {
       image: blogImg3,
       slug: 'control-health-journey',
       readTime: '7 min read'
-    },
-    {
-      id: 4,
-      title: 'Dive Reflex',
-      subtitle: 'Deep health analytics',
-      category: 'Analytics',
-      description: 'Dive into the world of health analytics and discover how data-driven insights are transforming healthcare decisions.',
-      image: blogImg1,
-      slug: 'ai-in-healthcare-innovations',
-      readTime: '8 min read'
-    },
-    {
-      id: 5,
-      title: 'The Places',
-      subtitle: 'Healthcare accessibility',
-      category: 'Access',
-      description: 'Understanding the importance of healthcare accessibility and how technology is breaking down barriers to quality care.',
-      image: blogImg2,
-      slug: 'reading-lab-results',
-      readTime: '5 min read'
-    },
-    {
-      id: 6,
-      title: 'Heist Mount Tam',
-      subtitle: 'Data security protocols',
-      category: 'Security',
-      description: 'Comprehensive guide to healthcare data security protocols and best practices for protecting sensitive patient information.',
-      image: blogImg3,
-      slug: 'hipaa-compliance',
-      readTime: '6 min read'
-    },
-    {
-      id: 7,
-      title: 'On The Run',
-      subtitle: 'Mobile health solutions',
-      category: 'Mobile',
-      description: 'Stay connected to your health on the go with innovative mobile health solutions designed for modern lifestyles.',
-      image: blogImg1,
-      slug: 'digital-health-records',
-      readTime: '4 min read'
-    },
-    {
-      id: 8,
-      title: 'Turning Tides',
-      subtitle: 'Healthcare transformation',
-      category: 'Future',
-      description: 'Explore how emerging technologies and new paradigms are reshaping the future of healthcare delivery and patient outcomes.',
-      image: blogImg2,
-      slug: 'prescription-labels',
-      readTime: '7 min read'
     }
   ];
 

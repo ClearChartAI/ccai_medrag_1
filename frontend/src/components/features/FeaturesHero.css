@@ -81,6 +81,7 @@
     border-radius: 50px;
     font-size: 0.9rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #8d87ba;
     margin-bottom: 2rem;
     border: 2px solid rgba(102, 126, 234, 0.2);
@@ -122,7 +123,7 @@
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
-    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .features-hero-title.visible {
@@ -191,6 +192,7 @@
     border-radius: 50px;
     font-size: 1.05rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
@@ -232,6 +234,7 @@
     border-radius: 50px;
     font-size: 1.05rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;

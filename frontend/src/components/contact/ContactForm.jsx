@@ -12,6 +12,8 @@ const ContactForm = () => {
     message: '',
     acceptTerms: false
   });
+  const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,10 +23,62 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission
+    setIsSubmitting(true);
+    setSubmitStatus({ type: '', message: '' });
+
+    try {
+      // Create mailto body
+      const emailBody = `
+Name: ${formData.firstName} ${formData.lastName}
+Email: ${formData.email}
+Phone: ${formData.phone || 'Not provided'}
+Topic: ${formData.topic}
+User Type: ${formData.userType}
+
+Message:
+${formData.message}
+      `.trim();
+
+      // Send email using mailto (opens user's email client)
+      const subject = encodeURIComponent(`Contact Form: ${formData.topic}`);
+      const body = encodeURIComponent(emailBody);
+      const mailtoLink = `mailto:team@clearchartai.io?subject=${subject}&body=${body}`;
+
+      // Open mailto link
+      window.location.href = mailtoLink;
+
+      // Show success message
+      setSubmitStatus({
+        type: 'success',
+        message: 'Your email client has been opened. Please send the email to complete your submission.'
+      });
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          topic: '',
+          userType: '',
+          message: '',
+          acceptTerms: false
+        });
+        setSubmitStatus({ type: '', message: '' });
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: 'There was an error processing your request. Please try again or email us directly at team@clearchartai.io'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -203,7 +257,15 @@ const ContactForm = () => {
             <label htmlFor="acceptTerms">I accept the terms of service</label>
           </div>
 
-          <button type="submit" className="btn-submit">Send</button>
+          {submitStatus.message && (
+            <div className={`submit-status ${submitStatus.type}`}>
+              {submitStatus.message}
+            </div>
+          )}
+
+          <button type="submit" className="btn-submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Send'}
+          </button>
         </form>
       </div>
     </section>

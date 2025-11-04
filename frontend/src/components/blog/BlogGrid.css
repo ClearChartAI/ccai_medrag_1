@@ -66,6 +66,7 @@
 .grid-title {
     font-size: 3rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #6B7A85;
     margin: 0 0 1rem 0;
     letter-spacing: -0.02em;
@@ -81,8 +82,10 @@
 /* Blog Grid */
 .blog-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Grid Card */
@@ -200,6 +203,7 @@
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 700;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.7);
@@ -209,6 +213,7 @@
 .card-title {
     font-size: 1.5rem;
     font-weight: 700;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #fff;
     line-height: 1.2;
     margin: 0 0 0.5rem 0;
@@ -238,6 +243,7 @@
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 700;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.6);
@@ -247,6 +253,7 @@
 .card-back-title {
     font-size: 1.75rem;
     font-weight: 700;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #fff;
     line-height: 1.2;
     margin: 0 0 1.5rem 0;

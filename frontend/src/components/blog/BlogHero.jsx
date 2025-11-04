@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './BlogHero.css';
 
+// Import blog images properly for Vite bundling
+import blogImg1 from '../../assets/blog-image-1.png';
+import blogImg2 from '../../assets/blog-image-2.png';
+import blogImg3 from '../../assets/blog-image-3.png';
+
 const BlogHero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -13,7 +18,7 @@ const BlogHero = () => {
       category: 'Featured',
       title: 'Understanding Your Medical Records',
       description: 'A complete guide to decode medical jargon and take control of your health journey',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_28_34 PM.png',
+      image: blogImg1,
       slug: 'understanding-medical-records-guide',
       date: 'Dec 15, 2025',
       readTime: '8 min read'
@@ -23,7 +28,7 @@ const BlogHero = () => {
       category: 'Technology',
       title: 'AI in Healthcare Innovations',
       description: 'How artificial intelligence is revolutionizing patient communication and care',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_33_06 PM.png',
+      image: blogImg3,
       slug: 'ai-in-healthcare-innovations',
       date: 'Dec 12, 2025',
       readTime: '5 min read'
@@ -33,7 +38,7 @@ const BlogHero = () => {
       category: 'Privacy',
       title: 'Patient Data Security Explained',
       description: 'Essential tips for protecting your personal health information online',
-      image: '/src/assets/ChatGPT Image Oct 4, 2025, 09_31_12 PM.png',
+      image: blogImg2,
       slug: 'patient-data-security-explained',
       date: 'Dec 13, 2025',
       readTime: '6 min read'

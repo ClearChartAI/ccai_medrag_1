@@ -24,7 +24,8 @@ const AboutTeam = () => {
       role: 'Lead AI engineer',
       description: 'Technical architect building intelligent systems that bridge medical complexity and patient comprehension',
       image: dhruvSurajImage,
-      imagePosition: 'center 30%',
+      imagePosition: 'center 18%',
+      imageScale: 1.5,
       linkedin: '#',
       twitter: '#',
       website: '#'
@@ -100,7 +101,10 @@ const AboutTeam = () => {
                   <img
                     src={member.image}
                     alt={member.name}
-                    style={member.imagePosition ? { objectPosition: member.imagePosition } : undefined}
+                    style={{
+                      objectPosition: member.imagePosition || 'center center',
+                      transform: member.imageScale ? `scale(${member.imageScale})` : undefined
+                    }}
                   />
                   <div className="team-image-overlay"></div>
                 </div>

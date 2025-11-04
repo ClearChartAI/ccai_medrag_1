@@ -10,13 +10,27 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 12);
+      setIsScrolled(window.scrollY > 0);
     };
 
     handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Check if we need to scroll to a section after navigation
+    const sectionToScroll = sessionStorage.getItem('scrollToSection');
+    if (sectionToScroll && location.pathname === '/') {
+      sessionStorage.removeItem('scrollToSection');
+      setTimeout(() => {
+        const element = document.getElementById(sectionToScroll);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,21 +42,34 @@ const Navbar = () => {
 
   const scrollToTop = () => {
     closeMenu();
+
+    // If not on homepage, navigate to homepage
+    if (location.pathname !== '/') {
+      window.location.href = '/';
+      return;
+    }
+
+    // If on homepage, scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scrollToSection = (sectionId) => {
     closeMenu();
 
-    // If not on homepage, navigate to homepage first
+    // If not on homepage, navigate to homepage first then scroll
     if (location.pathname !== '/') {
-      window.location.href = `/#${sectionId}`;
-    } else {
-      // If on homepage, scroll to section
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+      // Store the section to scroll to
+      sessionStorage.setItem('scrollToSection', sectionId);
+      window.location.href = '/';
+      return;
+    }
+
+    // If on homepage, scroll to section without changing URL
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Don't change the URL hash
+      history.replaceState(null, '', '/');
     }
   };
 

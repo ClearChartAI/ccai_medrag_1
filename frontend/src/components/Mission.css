@@ -24,10 +24,10 @@
 .mission-title {
     font-size: 3.5rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #6B7A85;
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
-    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .mission-description {
@@ -137,9 +137,9 @@
 .mission-card-name {
     font-size: 1.3rem;
     font-weight: 600;
+    font-family: 'Plus Jakarta Sans', 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: #6B7A85;
     margin-bottom: 0.5rem;
-    font-family: 'Montserrat', 'Proxima Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .mission-card.highlight .mission-card-name {
