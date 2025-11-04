@@ -42,20 +42,6 @@ const ContactForm = () => {
               </svg>
               <span>team@clearchartai.io</span>
             </div>
-            <div className="contact-detail-item">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                <path d="M6 4C6 2.89543 6.89543 2 8 2H12C13.1046 2 14 2.89543 14 4V16C14 17.1046 13.1046 18 12 18H8C6.89543 18 6 17.1046 6 16V4Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-                <circle cx="10" cy="15" r="0.5" fill="currentColor"/>
-              </svg>
-              <span>+1 (415) 555-0123</span>
-            </div>
-            <div className="contact-detail-item">
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                <path d="M10 9C11.1046 9 12 8.10457 12 7C12 5.89543 11.1046 5 10 5C8.89543 5 8 5.89543 8 7C8 8.10457 8.89543 9 10 9Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-                <path d="M10 18C10 18 15 13 15 9C15 6.23858 12.7614 4 10 4C7.23858 4 5 6.23858 5 9C5 13 10 18 10 18Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-              </svg>
-              <span>123 Sample St, Sydney NSW 2000 AU</span>
-            </div>
           </div>
         </div>
 

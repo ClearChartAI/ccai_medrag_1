@@ -73,12 +73,6 @@ const AboutTimeline = () => {
           <h2 className="timeline-title">{activeYear}</h2>
           <h3 className="timeline-subtitle">{currentData.title}</h3>
           <p className="timeline-description">{currentData.description}</p>
-          <div className="timeline-actions">
-            <button className="btn-timeline">Read</button>
-            <a href="#" className="link-timeline">
-              More <span>→</span>
-            </a>
-          </div>
         </div>
       </div>
     </section>

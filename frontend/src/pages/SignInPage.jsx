@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
-import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png';
+import logo from '../assets/ClearChartAI Word Mark 1.png';
 
 const AUTH_ERROR_MESSAGES = {
   'auth/email-already-in-use': 'This email is already registered. Please log in instead.',
@@ -104,15 +104,13 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left Panel - Brand Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-pink-200 via-purple-200 to-pink-300 items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#fdf6ff] via-[#f9e8ff] to-[#f0d4ff] items-center justify-center p-12">
         <div className="max-w-md text-center">
           {/* Logo */}
           <div className="flex items-center justify-center mb-8">
-            <img src={logo} alt="ClearChartAI Logo" className="w-24 h-24 object-contain" />
+            <img src={logo} alt="ClearChartAI Logo" className="w-64 h-auto object-contain" />
           </div>
 
-          {/* Brand Name */}
-          <h1 className="text-4xl font-bold text-slate-700 mb-4">ClearChartAI</h1>
           <p className="text-lg text-slate-600 mb-12">Understand Your Health Own Your Future</p>
 
           {/* Features List */}
@@ -246,7 +244,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-gradient-to-r from-purple-300 to-pink-300 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:from-purple-400 hover:to-pink-400 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-gradient-to-r from-[#f0d4ff] to-[#e6c0ff] py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:from-[#e6c0ff] hover:to-[#d9a6ff] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>

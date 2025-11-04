@@ -24,7 +24,7 @@ const AboutTeam = () => {
       role: 'Lead AI engineer',
       description: 'Technical architect building intelligent systems that bridge medical complexity and patient comprehension',
       image: dhruvSurajImage,
-      imagePosition: 'center center',
+      imagePosition: 'center 30%',
       linkedin: '#',
       twitter: '#',
       website: '#'

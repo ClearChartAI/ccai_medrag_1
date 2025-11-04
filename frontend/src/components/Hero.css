@@ -203,11 +203,10 @@
     border-radius: 50px;
     background: linear-gradient(45deg, #5FC4C4, #8d87ba, #764ba2, #5FC4C4);
     background-size: 300% 300%;
-    opacity: 0;
+    opacity: 0.7;
     transition: opacity 0.3s ease;
     z-index: -1;
     animation: rotateGradient 3s linear infinite;
-    animation-play-state: paused;
 }
 
 @keyframes rotateGradient {
@@ -224,7 +223,6 @@
 
 .btn-secondary:hover::before {
     opacity: 1;
-    animation-play-state: running;
 }
 
 .btn-secondary:hover {

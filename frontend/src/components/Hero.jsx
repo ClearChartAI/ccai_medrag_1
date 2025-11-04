@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -47,7 +49,7 @@ const Hero = () => {
             Your records, unified and simplified. Clear explanations, real understanding, no medical degree needed.
           </p>
           <div className="hero-actions">
-            <button className="btn-secondary">
+            <button className="btn-secondary" onClick={() => navigate('/login')}>
               Try Now
               <svg className="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
