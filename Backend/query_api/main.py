@@ -366,14 +366,14 @@ async def get_document_status(
 @app.post("/query", response_model=QueryResponse)
 @limiter.limit("200/hour")
 def query_documents(
-    http_request: Request,
-    request: QueryRequest,
+    request: Request,
+    query_request: QueryRequest,
     chat_id: Optional[str] = None,
     user_info: Dict[str, Any] = Depends(verify_identity_platform_token),
 ):
     """Query the vector index, generate an answer, and persist chat history."""
 
-    if not request.question.strip():
+    if not query_request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     user_id = user_info.get("sub")
@@ -381,7 +381,20 @@ def query_documents(
 
     ensure_user_profile(user_info, db)
 
-    chat = get_or_create_chat(db, user_id, chat_id, request.question)
+    # Check if user has any documents still processing
+    processing_docs = db.collection("documents").where("user_id", "==", user_id).where(
+        "processing_status", "in", ["pending", "processing", "in_progress"]
+    ).limit(1).get()
+
+    if processing_docs:
+        processing_doc = processing_docs[0].to_dict()
+        doc_name = processing_doc.get("title") or processing_doc.get("filename", "your document")
+        raise HTTPException(
+            status_code=409,
+            detail=f"Please wait - '{doc_name}' is still being processed. This usually takes 20-30 seconds. Try again in a moment!"
+        )
+
+    chat = get_or_create_chat(db, user_id, chat_id, query_request.question)
     chat_id = chat["chat_id"]
 
     print("📊 Query details:")
@@ -390,19 +403,22 @@ def query_documents(
     print(f" - Chat title: {chat.get('title', 'N/A')}")
     print(f" - Message count: {chat.get('message_count', 0)}")
 
-    logger.info(f"Query received: {request.question[:50]}...")
+    logger.info(f"Query received: {query_request.question[:50]}...")
 
     print("Generating query embedding...")
-    query_embedding_response = embedding_model.get_embeddings([request.question])
+    query_embedding_response = embedding_model.get_embeddings([query_request.question])
     query_embedding = query_embedding_response[0].values
 
-    print(f"Searching index for top {request.top_k} matches...")
+    print(f"Searching index for top {query_request.top_k} matches (user_id: {user_id})...")
     endpoint = MatchingEngineIndexEndpoint(index_endpoint_name=INDEX_ENDPOINT)
 
+    # Note: Vertex AI Matching Engine doesn't support metadata filtering in find_neighbors
+    # We'll retrieve significantly more results and filter by user_id in Firestore
+    # This accounts for multi-tenant scenarios where other users' documents may rank higher
     matches = endpoint.find_neighbors(
         deployed_index_id=DEPLOYED_INDEX_ID,
         queries=[query_embedding],
-        num_neighbors=request.top_k,
+        num_neighbors=100,  # Request many more to find user's chunks in multi-tenant index
     )
 
     if not matches or not matches[0]:
@@ -417,13 +433,20 @@ def query_documents(
     sources = []
 
     for neighbor in neighbors:
+        # Stop once we have enough chunks for this user
+        if len(chunks) >= query_request.top_k:
+            break
+
         print(f"DEBUG: Vector search returned chunk_id: {neighbor.id}")
         doc_ref = db.collection("chunks").document(neighbor.id)
         doc_snap = doc_ref.get()
 
         if doc_snap.exists:
             data = doc_snap.to_dict()
-            if data.get("user_id") == user_id:
+            chunk_user_id = data.get("user_id")
+            print(f"DEBUG: Chunk user_id: {chunk_user_id}, Expected user_id: {user_id}, Match: {chunk_user_id == user_id}")
+
+            if chunk_user_id == user_id:
                 chunks.append(data["text"])
                 sources.append(
                     {
@@ -433,9 +456,14 @@ def query_documents(
                         "document_id": data.get("document_id"),
                     }
                 )
+        else:
+            print(f"DEBUG: Chunk {neighbor.id} not found in Firestore")
 
     if not chunks:
-        raise HTTPException(status_code=404, detail="No chunk text found in Firestore")
+        raise HTTPException(
+            status_code=404,
+            detail=f"No documents found for your account. Please upload a medical document first."
+        )
 
     print(f"Retrieved {len(chunks)} chunks from Firestore")
 
@@ -444,7 +472,7 @@ def query_documents(
 
     prompt = f"""You are a helpful medical assistant. Answer the question based ONLY on the provided medical document excerpts.
 
-Question: {request.question}
+Question: {query_request.question}
 
 Medical Document Excerpts:
 {context}
@@ -468,7 +496,7 @@ Answer:"""
         "chat_id": chat_id,
         "user_id": user_id,
         "role": "user",
-        "content": request.question,
+        "content": query_request.question,
         "timestamp": now_iso,
     }
     db.collection("messages").document(user_message_id).set(user_message)
@@ -488,7 +516,7 @@ Answer:"""
     chat_ref = db.collection("chats").document(chat_id)
     chat_ref.update(
         {
-            "last_message": request.question,
+            "last_message": query_request.question,
             "last_message_at": now_iso,
             "updated_at": datetime.now().isoformat(),
             "message_count": Increment(2),
@@ -505,7 +533,7 @@ Answer:"""
         "query_executed",
         {
             "chat_id": chat_id,
-            "question": request.question[:100],
+            "question": query_request.question[:100],
             "sources_count": len(sources),
         },
     )

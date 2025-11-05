@@ -130,12 +130,15 @@ def process_document(event: Dict[str, Any], context: Any) -> None:
     chunks = _build_chunks(layout_json, form_json)
     print(f"Generated {len(chunks)} chunks from DocAI output")
 
+    # Filter out very short chunks (< 50 chars) - they're usually just form field labels
+    # Keep only substantive content for better retrieval quality
+    MIN_CHUNK_LENGTH = 50
     docs = [
         Document(page_content=chunk["text"], metadata=chunk["metadata"])
         for chunk in chunks
-        if chunk["text"].strip()
+        if chunk["text"].strip() and len(chunk["text"].strip()) >= MIN_CHUNK_LENGTH
     ]
-    print(f"Prepared {len(docs)} documents for vector store")
+    print(f"Prepared {len(docs)} documents for vector store (filtered from {len(chunks)} total chunks, min length: {MIN_CHUNK_LENGTH} chars)")
 
     _upsert_documents(
         documents=docs,

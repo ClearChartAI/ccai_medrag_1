@@ -37,7 +37,7 @@ const TypingIndicator = () => (
   </div>
 )
 
-const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null }) => {
+const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, isProcessing = false }) => {
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef(null)
   const messagesContainerRef = useRef(null)
@@ -48,13 +48,13 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!inputValue.trim() || isLoading) return
+    if (!inputValue.trim() || isLoading || isProcessing) return
     onSend(inputValue.trim())
     setInputValue('')
   }
 
   const handleSuggestion = (text) => {
-    if (isLoading) return
+    if (isLoading || isProcessing) return
     onSend(text)
   }
 
@@ -82,6 +82,22 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null })
           <p className="text-xs text-slate-500">Your AI-powered medical insights assistant</p>
         </div>
       </header>
+
+      {/* Processing Banner */}
+      {isProcessing && (
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-6 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1">
+              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '0ms' }} />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '150ms' }} />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '300ms' }} />
+            </div>
+            <p className="text-sm text-amber-800 font-medium">
+              Processing your document... This usually takes 20-30 seconds. Chat will be enabled once complete.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Messages Area */}
       <div
@@ -111,7 +127,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null })
                   key={suggestion}
                   type="button"
                   onClick={() => handleSuggestion(suggestion)}
-                  disabled={isLoading}
+                  disabled={isLoading || isProcessing}
                   className="rounded-full bg-white border border-teal-200 px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-teal-400 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 hover:text-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {suggestion}
@@ -136,15 +152,15 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null })
         <div className="flex items-center gap-3 rounded-xl border-2 border-teal-200 bg-white px-4 py-2 focus-within:border-teal-400 focus-within:shadow-md transition">
           <input
             type="text"
-            placeholder="Ask Clari anything..."
+            placeholder={isProcessing ? "Processing document..." : "Ask Clari anything..."}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            disabled={isLoading}
+            disabled={isLoading || isProcessing}
             className="flex-1 border-none bg-transparent text-sm text-gray-800 placeholder-slate-400 outline-none disabled:opacity-50"
           />
           <button
             type="submit"
-            disabled={isLoading || !inputValue.trim()}
+            disabled={isLoading || isProcessing || !inputValue.trim()}
             className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-teal-400 to-cyan-400 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-md disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
           >
             <span>Send</span>
@@ -165,6 +181,7 @@ ChatBox.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
   }),
+  isProcessing: PropTypes.bool,
 }
 
 export default ChatBox

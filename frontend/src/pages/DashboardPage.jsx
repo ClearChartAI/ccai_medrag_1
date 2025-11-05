@@ -37,6 +37,7 @@ export default function DashboardPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState(null);
+  const [hasProcessingDocs, setHasProcessingDocs] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
@@ -85,7 +86,12 @@ export default function DashboardPage() {
         gcs_path: doc.gcs_path,
       }));
       setDocuments(formatted);
-      console.log(`✓ Loaded ${formatted.length} documents`);
+
+      // Check if any documents are still processing
+      const processing = formatted.some((doc) => doc.status === 'pending');
+      setHasProcessingDocs(processing);
+
+      console.log(`✓ Loaded ${formatted.length} documents, ${processing ? 'some still processing' : 'all ready'}`);
     } catch (error) {
       console.error('Failed to load documents:', error);
     } finally {
@@ -98,6 +104,18 @@ export default function DashboardPage() {
     loadDocuments();
   }, [currentUser, loadDocuments]);
 
+  // Auto-refresh documents while processing
+  useEffect(() => {
+    if (!hasProcessingDocs) return;
+
+    const interval = setInterval(() => {
+      console.log('🔄 Auto-refreshing documents (processing detected)');
+      loadDocuments();
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [hasProcessingDocs, loadDocuments]);
+
   const handleSendMessage = useCallback(
     async (text) => {
       const trimmed = text.trim();
@@ -108,10 +126,10 @@ export default function DashboardPage() {
 
       try {
         console.log('🔍 Current chat ID (before request):', currentChatId);
-        const response = await api.post('/query', {
+        const url = currentChatId ? `/query?chat_id=${currentChatId}` : '/query';
+        const response = await api.post(url, {
           question: trimmed,
           top_k: 5,
-          chat_id: currentChatId,
         });
 
         const answer = response?.data?.answer ?? 'I reviewed your records and generated a response.';
@@ -205,6 +223,7 @@ export default function DashboardPage() {
         isLoading={isLoading}
         suggestions={suggestionPrompts}
         user={sidebarUser}
+        isProcessing={hasProcessingDocs}
       />
 
       <RecordsList
