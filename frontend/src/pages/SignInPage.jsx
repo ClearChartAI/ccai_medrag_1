@@ -114,7 +114,7 @@ export default function SignInPage() {
           <p className="text-lg text-slate-600 mb-12">Understand Your Health Own Your Future</p>
 
           {/* Features List */}
-          <div className="space-y-4 text-left">
+          <div className="space-y-4 text-center">
             <p className="text-slate-600">Unified medical records</p>
             <p className="text-slate-600">AI-powered explanations</p>
             <p className="text-slate-600">HIPAA-compliant security</p>
@@ -125,7 +125,7 @@ export default function SignInPage() {
       {/* Right Panel - Sign Up Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             <h2 className="text-3xl font-bold text-slate-700 mb-2">Create your account</h2>
             <p className="text-slate-500">Start your journey to better health understanding</p>
           </div>
