@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Send, Sparkles } from 'lucide-react'
+import { Send, Sparkles, AlertCircle } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 
 const ChatBubble = ({ message }) => {
@@ -8,20 +8,20 @@ const ChatBubble = ({ message }) => {
   return (
     <div className={`flex mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-sm ${
+        className={`max-w-[75%] rounded-2xl px-5 py-3.5 shadow-sm break-words ${
           isUser
-            ? 'bg-gradient-to-r from-teal-300 to-cyan-300 text-slate-800 rounded-br-sm'
-            : 'bg-white border border-teal-100 text-gray-800 rounded-bl-sm'
+            ? 'bg-blue-600 text-white'
+            : 'bg-slate-100 text-slate-900'
         }`}
       >
         {isUser ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</p>
         ) : (
-          <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-slate-800 prose-strong:text-slate-900 prose-p:text-gray-800 prose-li:text-gray-800">
+          <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-slate-900 prose-strong:text-slate-900 prose-p:text-slate-900 prose-li:text-slate-900 break-words">
             <ReactMarkdown>{message.content}</ReactMarkdown>
           </div>
         )}
-        <span className={`text-[10px] mt-2 block ${isUser ? 'text-teal-700' : 'text-gray-400'}`}>
+        <span className={`text-[10px] mt-2 block ${isUser ? 'text-blue-100' : 'text-slate-500'}`}>
           {new Date(message.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
         </span>
       </div>
@@ -41,6 +41,10 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef(null)
   const messagesContainerRef = useRef(null)
+
+  const MAX_CHARS = 2000
+  const charCount = inputValue.length
+  const charPercentage = (charCount / MAX_CHARS) * 100
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -71,53 +75,91 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
   }
 
   return (
-    <section className="flex h-screen flex-1 flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50">
-      {/* Header - Premium Style */}
-      <header className="flex items-center justify-between border-b border-teal-100 bg-white/80 backdrop-blur-sm px-6 py-4 shadow-sm">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <Sparkles className="text-teal-400" size={20} />
-            Chat with Clari
-          </h2>
-          <p className="text-xs text-slate-500">Your AI-powered medical insights assistant</p>
+    <section className="flex h-screen flex-1 flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 relative">
+      {/* Subtle Disclaimer */}
+      <div className="bg-slate-50 border-b border-slate-200 px-6 py-2.5">
+        <div className="flex items-center justify-center">
+          <p className="text-xs text-slate-400 text-center">
+            Clari helps you understand your medical records for clarity and is NOT a substitute for professional medical advice. Always consult a healthcare provider for medical concerns.
+          </p>
         </div>
-      </header>
-
-      {/* Processing Banner */}
-      {isProcessing && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-6 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1">
-              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '0ms' }} />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '150ms' }} />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '300ms' }} />
-            </div>
-            <p className="text-sm text-amber-800 font-medium">
-              Processing your document... This usually takes 20-30 seconds. Chat will be enabled once complete.
-            </p>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Messages Area */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-6 py-6"
-        style={{ height: 'calc(100vh - 140px)' }}
+        className="flex-1 overflow-y-auto px-6 py-6 pb-32"
       >
         {messages.length === 0 ? (
           // Empty State - Premium Design
-          <div className="flex h-full flex-col items-center justify-center space-y-6">
+          <div className="flex h-full flex-col items-center justify-center space-y-8">
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-200 to-cyan-200 mb-4">
-                <Sparkles className="text-teal-600" size={32} />
-              </div>
               <h3 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
                 Hey {getUserFirstName()}!
               </h3>
               <p className="text-sm text-slate-600 max-w-md">
                 Upload your medical records and ask questions to summarize, explain, or plan your care.
               </p>
+            </div>
+
+            {/* Chat Input - Centered in empty state */}
+            <div className="w-full max-w-2xl px-6">
+              {isProcessing && (
+                <div className="mb-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-3 shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex gap-1">
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '0ms' }} />
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '150ms' }} />
+                      <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '300ms' }} />
+                    </div>
+                    <p className="text-xs text-amber-800 font-medium">
+                      Processing document... Chat will be enabled soon.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-teal-100">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-3 px-6 py-3.5">
+                    <input
+                      type="text"
+                      placeholder={isProcessing ? "Processing document..." : "Ask Clari anything..."}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      maxLength={MAX_CHARS}
+                      disabled={isLoading || isProcessing}
+                      className="flex-1 border-none bg-transparent text-sm text-gray-800 placeholder-slate-400 outline-none disabled:opacity-50"
+                    />
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-medium ${charCount > MAX_CHARS * 0.9 ? 'text-red-600' : 'text-slate-400'}`}>
+                        {charCount}/{MAX_CHARS}
+                      </span>
+                      <button
+                        type="submit"
+                        disabled={isLoading || isProcessing || !inputValue.trim()}
+                        className="flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
+                      >
+                        <span>Send</span>
+                        <Send size={16} />
+                      </button>
+                    </div>
+                  </div>
+                  {/* Character limit progress bar */}
+                  {charCount > 0 && (
+                    <div className="px-6 pb-2">
+                      <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-200 ${
+                            charPercentage > 90 ? 'bg-red-500' : charPercentage > 75 ? 'bg-amber-500' : 'bg-teal-400'
+                          }`}
+                          style={{ width: `${charPercentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </form>
             </div>
 
             {/* Suggestion Pills - Premium Style */}
@@ -147,27 +189,67 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
         )}
       </div>
 
-      {/* Input Box - Premium Style */}
-      <form onSubmit={handleSubmit} className="border-t border-teal-100 bg-white/80 backdrop-blur-sm px-6 py-4 shadow-lg">
-        <div className="flex items-center gap-3 rounded-xl border-2 border-teal-200 bg-white px-4 py-2 focus-within:border-teal-400 focus-within:shadow-md transition">
-          <input
-            type="text"
-            placeholder={isProcessing ? "Processing document..." : "Ask Clari anything..."}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            disabled={isLoading || isProcessing}
-            className="flex-1 border-none bg-transparent text-sm text-gray-800 placeholder-slate-400 outline-none disabled:opacity-50"
-          />
-          <button
-            type="submit"
-            disabled={isLoading || isProcessing || !inputValue.trim()}
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-teal-400 to-cyan-400 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-md disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
-          >
-            <span>Send</span>
-            <Send size={16} />
-          </button>
+      {/* Floating Chat Input Island - Only shown when there are messages */}
+      {messages.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-3xl px-6 z-50">
+          {isProcessing && (
+            <div className="mb-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-4 py-3 shadow-lg backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex gap-1">
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '0ms' }} />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '150ms' }} />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-amber-500" style={{ animationDelay: '300ms' }} />
+                </div>
+                <p className="text-xs text-amber-800 font-medium">
+                  Processing document... Chat will be enabled soon.
+                </p>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-teal-100">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-3 px-6 py-3.5">
+                <input
+                  type="text"
+                  placeholder={isProcessing ? "Processing document..." : "Ask Clari anything..."}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  maxLength={MAX_CHARS}
+                  disabled={isLoading || isProcessing}
+                  className="flex-1 border-none bg-transparent text-sm text-gray-800 placeholder-slate-400 outline-none disabled:opacity-50"
+                />
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-medium ${charCount > MAX_CHARS * 0.9 ? 'text-red-600' : 'text-slate-400'}`}>
+                    {charCount}/{MAX_CHARS}
+                  </span>
+                  <button
+                    type="submit"
+                    disabled={isLoading || isProcessing || !inputValue.trim()}
+                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
+                  >
+                    <span>Send</span>
+                    <Send size={16} />
+                  </button>
+                </div>
+              </div>
+              {/* Character limit progress bar */}
+              {charCount > 0 && (
+                <div className="px-6 pb-2">
+                  <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-200 ${
+                        charPercentage > 90 ? 'bg-red-500' : charPercentage > 75 ? 'bg-amber-500' : 'bg-teal-400'
+                      }`}
+                      style={{ width: `${charPercentage}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </form>
         </div>
-      </form>
+      )}
     </section>
   )
 }

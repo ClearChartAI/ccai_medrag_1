@@ -14,11 +14,12 @@ import Contact from './pages/Contact';
 import SignInPage from './pages/SignInPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import RecordsPage from './pages/RecordsPage.jsx';
 import './App.css';
 
 function App() {
   const location = useLocation();
-  const hideNavbarFooter = location.pathname === '/login' || location.pathname === '/signin' || location.pathname === '/dashboard';
+  const hideNavbarFooter = location.pathname === '/login' || location.pathname === '/signin' || location.pathname === '/dashboard' || location.pathname === '/records';
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,6 +56,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/records"
+          element={
+            <ProtectedRoute>
+              <RecordsPage />
             </ProtectedRoute>
           }
         />

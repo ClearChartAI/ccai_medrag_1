@@ -10,3 +10,4 @@ google-auth-oauthlib
 firebase-admin
 python-jose[cryptography]
 slowapi==0.1.9
+requests

@@ -43,12 +43,20 @@ export default function SignInPage() {
     try {
       setError('');
       setLoading(true);
-      await signInWithGoogle();
-      navigate('/dashboard');
+
+      // Auto-detects: popup for localhost, redirect for production
+      const result = await signInWithGoogle();
+
+      // If using popup mode (localhost), handle the result immediately
+      if (result) {
+        await api.get('/profile');
+        navigate('/dashboard');
+      }
+      // If using redirect mode (production), this code won't execute
+      // because the page will redirect before reaching here
     } catch (err) {
       console.error('Google sign-in failed:', err);
       setError('Failed to sign in with Google. Please try again.');
-    } finally {
       setLoading(false);
     }
   };

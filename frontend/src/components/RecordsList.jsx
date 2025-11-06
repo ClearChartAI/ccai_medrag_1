@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { FileText, ArrowRight, Loader2, UploadCloud, ChevronRight } from 'lucide-react'
+import { FileText, ArrowRight, Loader2, UploadCloud, Eye } from 'lucide-react'
 
 const badgeStyles = {
   pending: 'bg-orange-100 text-orange-600 border border-orange-200',
@@ -7,7 +7,7 @@ const badgeStyles = {
   default: 'bg-slate-100 text-slate-500 border border-slate-200',
 }
 
-const RecordsList = ({ documents = [], isUploading, onUpload }) => {
+const RecordsList = ({ documents = [], isUploading, onUpload, onViewDocument }) => {
   const hasDocuments = documents.length > 0
 
   return (
@@ -28,32 +28,32 @@ const RecordsList = ({ documents = [], isUploading, onUpload }) => {
           documents.map((doc) => (
             <div
               key={doc.document_id || doc.id || doc.filename}
-              className="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm border border-teal-100 hover:shadow-md transition"
+              className="flex flex-col gap-2 rounded-xl bg-white px-4 py-3 shadow-sm border border-teal-100 hover:shadow-md transition"
             >
-              <div className="flex items-start gap-3">
-                <div className="rounded-lg bg-gradient-to-br from-teal-100 to-cyan-100 p-2 text-teal-600">
-                  <FileText size={18} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-800">{doc.name}</p>
-                  <div className="flex items-center gap-2 text-xs text-slate-400">
-                    <span>{doc.date}</span>
-                    {doc.file_size ? (
-                      <>
-                        <span>•</span>
-                        <span>{Math.max(doc.file_size / 1024, 1).toFixed(0)} KB</span>
-                      </>
-                    ) : null}
-                    {doc.page_count ? (
-                      <>
-                        <span>•</span>
-                        <span>{doc.page_count} pages</span>
-                      </>
-                    ) : null}
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-lg bg-gradient-to-br from-teal-100 to-cyan-100 p-2 text-teal-600">
+                    <FileText size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{doc.name}</p>
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <span>{doc.date}</span>
+                      {doc.file_size ? (
+                        <>
+                          <span>•</span>
+                          <span>{Math.max(doc.file_size / 1024, 1).toFixed(0)} KB</span>
+                        </>
+                      ) : null}
+                      {doc.page_count ? (
+                        <>
+                          <span>•</span>
+                          <span>{doc.page_count} pages</span>
+                        </>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col items-end gap-2">
                 <span
                   className={`rounded-full px-3 py-1 text-[11px] font-semibold capitalize ${
                     badgeStyles[doc.status] || badgeStyles.default
@@ -61,8 +61,16 @@ const RecordsList = ({ documents = [], isUploading, onUpload }) => {
                 >
                   {doc.status}
                 </span>
-                <ChevronRight size={16} className="text-teal-300" />
               </div>
+              {onViewDocument && (
+                <button
+                  onClick={() => onViewDocument(doc)}
+                  className="flex items-center justify-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-xs font-medium text-teal-700 hover:bg-teal-100 transition border border-teal-200"
+                >
+                  <Eye size={14} />
+                  <span>View Document</span>
+                </button>
+              )}
             </div>
           ))}
 
@@ -94,6 +102,7 @@ RecordsList.propTypes = {
   documents: PropTypes.array,
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
+  onViewDocument: PropTypes.func,
 }
 
 export default RecordsList

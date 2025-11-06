@@ -7,6 +7,7 @@ import Sidebar from '../components/Sidebar.jsx';
 import UploadModal from '../components/UploadModal.jsx';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
+import { auth } from '../config/firebase';
 
 const getUiStatus = (processingStatus) => {
   const normalized = (processingStatus || '').toLowerCase();
@@ -38,6 +39,8 @@ export default function DashboardPage() {
   const [documentsLoading, setDocumentsLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [hasProcessingDocs, setHasProcessingDocs] = useState(false);
+  const [viewingDoc, setViewingDoc] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   useEffect(() => {
     if (!currentUser) {
@@ -70,8 +73,9 @@ export default function DashboardPage() {
   const loadDocuments = useCallback(async () => {
     setDocumentsLoading(true);
     try {
-      const response = await api.get('/documents');
-      const docs = response.data?.documents ?? [];
+      const response = await api.get('/documents/list');
+      // Backend returns array directly, not wrapped in {documents: [...]}
+      const docs = Array.isArray(response.data) ? response.data : (response.data?.documents ?? []);
       const formatted = docs.map((doc) => ({
         id: doc.document_id,
         document_id: doc.document_id,
@@ -209,13 +213,37 @@ export default function DashboardPage() {
     }
   }, [logout, navigate]);
 
+  const handleRecords = useCallback(() => {
+    navigate('/records');
+  }, [navigate]);
+
+  const handleViewDocument = useCallback(async (doc) => {
+    setViewingDoc(doc);
+    setPdfUrl(null);
+
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      const url = `${API_URL}/documents/${doc.document_id}/view?token=${token}`;
+      setPdfUrl(url);
+    } catch (error) {
+      console.error('Failed to generate PDF URL:', error);
+      setViewingDoc(null);
+    }
+  }, []);
+
+  const handleCloseViewer = useCallback(() => {
+    setViewingDoc(null);
+    setPdfUrl(null);
+  }, []);
+
   if (!currentUser) {
     return null;
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 text-slate-700 md:flex-row">
-      <Sidebar onNewChat={handleNewChat} onLogout={handleLogout} user={sidebarUser} />
+      <Sidebar onNewChat={handleNewChat} onLogout={handleLogout} onRecords={handleRecords} user={sidebarUser} />
 
       <ChatBox
         messages={messages}
@@ -226,10 +254,38 @@ export default function DashboardPage() {
         isProcessing={hasProcessingDocs}
       />
 
+      {viewingDoc && (
+        <div className="flex h-screen w-full max-w-2xl flex-col border-l border-teal-100 bg-white">
+          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+            <h3 className="text-sm font-semibold text-slate-900">{viewingDoc.name}</h3>
+            <button
+              onClick={handleCloseViewer}
+              className="rounded-lg px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 transition"
+            >
+              Close
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            {pdfUrl ? (
+              <iframe
+                src={pdfUrl}
+                className="h-full w-full"
+                title={viewingDoc.name}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-sm text-slate-500">Loading document...</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <RecordsList
         documents={documents}
         isUploading={isUploading || documentsLoading}
         onUpload={() => setIsUploadOpen(true)}
+        onViewDocument={handleViewDocument}
       />
 
       <UploadModal

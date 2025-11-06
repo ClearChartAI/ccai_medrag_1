@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import PropTypes from 'prop-types';
 import {
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -19,17 +21,68 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+
+    // Handle redirect result from Google OAuth
+    const checkRedirectResult = async () => {
+      try {
+        console.log('[AUTH] Checking for redirect result...');
+        const result = await getRedirectResult(auth);
+
+        if (result?.user && mounted) {
+          console.log('[AUTH] ✓ Redirect sign-in successful:', result.user.email);
+
+          // Call backend to ensure profile exists
+          try {
+            const api = (await import('../utils/api.js')).default;
+            await api.get('/profile');
+            console.log('[AUTH] ✓ Profile verified');
+          } catch (error) {
+            console.error('[AUTH] Profile check failed:', error);
+            if (mounted) {
+              setAuthError('Failed to create profile. Please try again.');
+            }
+          }
+        } else {
+          console.log('[AUTH] No redirect result (normal page load)');
+        }
+      } catch (error) {
+        console.error('[AUTH] Redirect result error:', error);
+        if (mounted) {
+          setAuthError(error.message);
+        }
+      }
+    };
+
+    checkRedirectResult();
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
+      if (mounted) {
+        console.log('[AUTH] Auth state changed:', user?.email || 'No user');
+        setCurrentUser(user);
+        setLoading(false);
+      }
     });
 
-    return unsubscribe;
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
     setAuthError(null);
-    return signInWithPopup(auth, googleProvider);
+
+    // Use popup for local development, redirect for production
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    if (isLocalhost) {
+      console.log('[AUTH] Local development: Using popup sign-in');
+      return signInWithPopup(auth, googleProvider);
+    } else {
+      console.log('[AUTH] Production: Using redirect sign-in');
+      return signInWithRedirect(auth, googleProvider);
+    }
   }, []);
 
   const loginWithEmail = useCallback(async (email, password) => {

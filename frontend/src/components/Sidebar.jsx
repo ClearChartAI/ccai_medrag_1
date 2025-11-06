@@ -1,28 +1,40 @@
 import PropTypes from 'prop-types'
 
-import { MessageSquarePlus, LogOut } from 'lucide-react'
+import { MessageSquarePlus, LogOut, Folder } from 'lucide-react'
 // Commented out for future use:
-// import { Clock3, Search, Folder, FileText, StickyNote, Settings } from 'lucide-react'
+// import { Clock3, Search, FileText, StickyNote, Settings } from 'lucide-react'
 import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png'
 
-const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) => {
+const Sidebar = ({ onNewChat = undefined, onLogout = undefined, onRecords = undefined, user = null }) => {
   return (
-    <aside className="flex h-full w-full max-w-[240px] flex-col justify-between bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 px-6 py-6 text-slate-700 border-r border-teal-100">
+    <aside className="flex h-screen w-full max-w-[240px] flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 px-6 py-6 text-slate-700 border-r border-teal-100">
+      {/* Top Section */}
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-xl font-semibold text-slate-900">
           <img src={logo} alt="ClearChartAI Logo" className="h-10 w-10 object-contain" />
           <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">ClearChartAI</span>
         </div>
 
-        {/* New Chat Button - Premium Design */}
-        <button
-          type="button"
-          onClick={onNewChat}
-          className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg transform hover:scale-105"
-        >
-          <MessageSquarePlus size={20} />
-          <span>New Chat</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={onNewChat}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg transform hover:scale-105"
+          >
+            <MessageSquarePlus size={20} />
+            <span>New Chat</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onRecords}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-400 to-indigo-400 px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:from-blue-500 hover:to-indigo-500 hover:shadow-lg transform hover:scale-105"
+          >
+            <Folder size={20} />
+            <span>Records</span>
+          </button>
+        </div>
 
         {/* Future navigation items commented out */}
         {/*
@@ -36,10 +48,6 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) =
             <span>Search</span>
           </button>
           <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
-            <Folder size={18} />
-            <span>Records</span>
-          </button>
-          <button className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-white hover:shadow-sm">
             <FileText size={18} />
             <span>Results</span>
           </button>
@@ -51,6 +59,10 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, user = null }) =
         */}
       </div>
 
+      {/* Spacer to push bottom section to bottom */}
+      <div className="flex-1"></div>
+
+      {/* Bottom Section - Account & Logout */}
       <div className="space-y-3">
         {user && (
           <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 text-sm shadow-sm border border-teal-100">
@@ -111,6 +123,7 @@ export default Sidebar
 Sidebar.propTypes = {
   onNewChat: PropTypes.func,
   onLogout: PropTypes.func,
+  onRecords: PropTypes.func,
   user: PropTypes.shape({
     uid: PropTypes.string,
     email: PropTypes.string,
