@@ -18,7 +18,7 @@ load_dotenv()
 
 # Import configuration
 from app.config import Config
-from app.routes import query_router, documents_router, health_router, profile_router
+from app.routes import query_router, documents_router, health_router, profile_router, summaries_router, notes_router, chats_router
 
 # Initialize configuration
 config = Config.from_env()
@@ -51,8 +51,11 @@ app.add_middleware(
 # Register route modules
 app.include_router(health_router)
 app.include_router(query_router)
+app.include_router(summaries_router)  # Register before documents_router to avoid route conflicts
 app.include_router(documents_router)
 app.include_router(profile_router)
+app.include_router(notes_router)
+app.include_router(chats_router)
 
 
 # Root endpoint

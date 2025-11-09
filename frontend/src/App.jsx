@@ -15,11 +15,14 @@ import SignInPage from './pages/SignInPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import RecordsPage from './pages/RecordsPage.jsx';
+import SummariesPage from './pages/SummariesPage.jsx';
+import NotesPage from './pages/NotesPage.jsx';
+import ChatHistoryPage from './pages/ChatHistoryPage.jsx';
 import './App.css';
 
 function App() {
   const location = useLocation();
-  const hideNavbarFooter = location.pathname === '/login' || location.pathname === '/signin' || location.pathname === '/dashboard' || location.pathname === '/records';
+  const hideNavbarFooter = location.pathname === '/login' || location.pathname === '/signin' || location.pathname === '/dashboard' || location.pathname === '/records' || location.pathname === '/summaries' || location.pathname === '/notes' || location.pathname === '/chat-history';
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,6 +67,30 @@ function App() {
           element={
             <ProtectedRoute>
               <RecordsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/summaries"
+          element={
+            <ProtectedRoute>
+              <SummariesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notes"
+          element={
+            <ProtectedRoute>
+              <NotesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat-history"
+          element={
+            <ProtectedRoute>
+              <ChatHistoryPage />
             </ProtectedRoute>
           }
         />

@@ -3,6 +3,14 @@ import os
 from dataclasses import dataclass
 
 
+def _require_env(name: str) -> str:
+    """Get required environment variable or raise error."""
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+
 @dataclass
 class Config:
     """Ingestion function configuration."""
@@ -45,11 +53,3 @@ class Config:
             deployed_index_id=_require_env("DEPLOYED_INDEX_ID"),
             artifact_bucket=_require_env("ARTIFACT_BUCKET"),
         )
-
-
-def _require_env(name: str) -> str:
-    """Get required environment variable or raise error."""
-    value = os.getenv(name)
-    if not value:
-        raise RuntimeError(f"Missing required environment variable: {name}")
-    return value

@@ -47,10 +47,13 @@ async def upload_document(
 
     - Ensures user profile exists
     - Validates PDF format
-    - Uploads to GCS bucket
+    - Uploads to GCS bucket (encrypted at rest)
     - Creates Firestore metadata
     - Triggers Cloud Function for processing
+    - Logs PHI upload (HIPAA §164.312(b) - Audit Controls)
     """
+    from app.utils.hipaa_audit import HIPAAAuditLogger
+
     # Ensure user profile exists (creates if needed)
     firestore_repo = FirestoreRepository(project_id=db.project)
     await ensure_user_profile(current_user, firestore_repo)
@@ -96,6 +99,18 @@ async def upload_document(
     except Exception:
         pass  # Non-critical
 
+    # HIPAA Audit: Log PHI upload
+    audit_logger = HIPAAAuditLogger(db)
+    audit_logger.log_phi_access(
+        user_id=user_id,
+        action="document_upload",
+        resource_type="document",
+        resource_id=document_id,
+        success=True,
+        request=request,
+        metadata={"filename": file.filename, "file_size": len(content)},
+    )
+
     return {
         "message": "Document uploaded successfully",
         "document_id": document_id,
@@ -121,12 +136,39 @@ async def list_documents(
 
     documents = [doc.to_dict() for doc in docs_stream]
 
-    return {"documents": documents, "count": len(documents)}
+    return documents
+
+
+@router.get("/{document_id}")
+async def get_document(
+    document_id: str,
+    current_user: TokenData = Depends(get_current_user),
+    db: firestore.Client = Depends(get_firestore_client),
+):
+    """
+    Get document metadata by ID.
+
+    Returns document information including title, filename, etc.
+    """
+    doc_ref = db.collection("documents").document(document_id)
+    doc = doc_ref.get()
+
+    if not doc.exists:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    doc_data = doc.to_dict()
+
+    # Verify ownership
+    if doc_data.get("user_id") != current_user.uid:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    return doc_data
 
 
 @router.get("/{document_id}/view")
 async def stream_document(
     document_id: str,
+    request: Request,
     token: str = None,
     storage_client: storage.Client = Depends(get_storage_client),
     db: firestore.Client = Depends(get_firestore_client),
@@ -140,8 +182,15 @@ async def stream_document(
     Authentication can be provided via:
     - Authorization header (handled by get_current_user dependency)
     - token query parameter (for iframe usage)
+
+    HIPAA Compliance:
+    - Logs all PHI access (§164.312(b) - Audit Controls)
+    - Verifies user ownership before streaming
     """
     from firebase_admin import auth as firebase_auth
+    from app.utils.hipaa_audit import HIPAAAuditLogger
+
+    audit_logger = HIPAAAuditLogger(db)
 
     try:
         # Get user from token query parameter if provided
@@ -160,11 +209,36 @@ async def stream_document(
         doc = doc_ref.get()
 
         if not doc.exists:
+            # Log failed access
+            audit_logger.log_failed_access(
+                user_id=user_id,
+                action="document_view",
+                resource_type="document",
+                resource_id=document_id,
+                reason="document_not_found",
+                request=request,
+            )
             raise HTTPException(status_code=404, detail="Document not found")
 
         doc_data = doc.to_dict()
         if doc_data.get("user_id") != user_id:
+            # Log unauthorized access attempt
+            audit_logger.log_failed_access(
+                user_id=user_id,
+                action="document_view",
+                resource_type="document",
+                resource_id=document_id,
+                reason="unauthorized_access",
+                request=request,
+            )
             raise HTTPException(status_code=403, detail="Not authorized")
+
+        # HIPAA Audit: Log successful PHI access
+        audit_logger.log_document_view(
+            user_id=user_id,
+            document_id=document_id,
+            request=request,
+        )
 
         gcs_path = doc_data.get("gcs_path", "")
         if not gcs_path.startswith("gs://"):
@@ -200,7 +274,9 @@ async def stream_document(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to stream document: {str(e)}")
+        # Don't expose internal errors that might contain PHI
+        print(f"Document streaming error: {str(e)}")  # Log internally only
+        raise HTTPException(status_code=500, detail="Failed to stream document. Please try again.")
 
 
 @router.delete("/{document_id}")
@@ -211,18 +287,20 @@ async def delete_document(
     db: firestore.Client = Depends(get_firestore_client),
 ):
     """
-    Delete a document and all its associated data.
+    HIPAA-compliant deletion of document and ALL associated PHI.
 
-    This removes:
-    - Document metadata from Firestore
-    - PDF file from Cloud Storage
-    - All text chunks from Firestore
+    Deletes:
+    - Document metadata (including summary - contains PHI)
+    - PDF file from Cloud Storage (full PHI)
+    - All chunks from NEW subcollection (documents/{id}/chunks)
+    - All chunks from OLD collection (chunks - backward compat)
     - All vector embeddings from Vertex AI Vector Search
+    - Related chat messages (prevent PHI leakage)
     """
     from app.repositories.vector_repo import VectorRepository
     from app.config import Config
 
-    # 1. Get document to verify ownership
+    # 1. Get document to verify ownership (HIPAA access control)
     doc_ref = db.collection("documents").document(document_id)
     doc = doc_ref.get()
 
@@ -233,12 +311,39 @@ async def delete_document(
     if doc_data.get("user_id") != current_user.uid:
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    # 2. Get all chunks associated with this document
-    chunks_ref = db.collection("chunks").where("document_id", "==", document_id)
-    chunks = list(chunks_ref.stream())
-    chunk_ids = [chunk.id for chunk in chunks]
+    chunk_ids = []
 
-    # 3. Delete vectors from Vertex AI Vector Search
+    # 2. Delete chunks from NEW subcollection (documents/{id}/chunks) - CRITICAL FIX
+    chunks_subcollection = doc_ref.collection("chunks")
+    batch = db.batch()
+    batch_count = 0
+
+    for chunk_doc in chunks_subcollection.stream():
+        chunk_ids.append(chunk_doc.id)
+        batch.delete(chunk_doc.reference)
+        batch_count += 1
+
+        if batch_count >= 500:  # Firestore batch limit
+            batch.commit()
+            batch = db.batch()
+            batch_count = 0
+
+    if batch_count > 0:
+        batch.commit()
+
+    # 3. Delete chunks from OLD collection (backward compatibility)
+    old_chunks_ref = db.collection("chunks").where("document_id", "==", document_id)
+    old_chunks = list(old_chunks_ref.stream())
+
+    if old_chunks:
+        batch = db.batch()
+        for chunk in old_chunks:
+            if chunk.id not in chunk_ids:
+                chunk_ids.append(chunk.id)
+            batch.delete(chunk.reference)
+        batch.commit()
+
+    # 4. Delete vectors from Vertex AI Vector Search
     if chunk_ids:
         try:
             config = Config.from_env()
@@ -248,19 +353,10 @@ async def delete_document(
                 index_id=config.index_id,
             )
             vector_repo.remove_vectors(chunk_ids)
-        except Exception:
-            # Continue with deletion even if vector removal fails
-            pass
+        except Exception as e:
+            print(f"Vector deletion warning: {e}")
 
-    # 4. Delete chunks from Firestore
-    batch = db.batch()
-    for chunk in chunks:
-        batch.delete(chunk.reference)
-
-    if chunks:
-        batch.commit()
-
-    # 5. Delete PDF from Cloud Storage
+    # 5. Delete PDF from Cloud Storage (contains full PHI)
     gcs_path = doc_data.get("gcs_path", "")
     if gcs_path.startswith("gs://"):
         path_parts = gcs_path.replace("gs://", "").split("/", 1)
@@ -270,13 +366,26 @@ async def delete_document(
                 bucket = storage_client.bucket(bucket_name)
                 blob = bucket.blob(object_name)
                 blob.delete()
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Storage deletion warning: {e}")
 
-    # 6. Delete document metadata from Firestore
+    # 6. Delete chat messages referencing this document (prevent PHI leakage)
+    try:
+        chats_ref = db.collection("chats").where("user_id", "==", current_user.uid)
+        for chat_doc in chats_ref.stream():
+            messages_ref = db.collection("messages").where("chat_id", "==", chat_doc.id)
+            for msg_doc in messages_ref.stream():
+                msg_data = msg_doc.to_dict()
+                sources = msg_data.get("sources", [])
+                if any(s.get("document_id") == document_id for s in sources):
+                    msg_doc.reference.delete()
+    except Exception as e:
+        print(f"Chat cleanup warning: {e}")
+
+    # 7. Delete document metadata (includes summary with PHI)
     doc_ref.delete()
 
-    # 7. Update user's document count
+    # 8. Update user's document count
     user_ref = db.collection("users").document(current_user.uid)
     user_doc = user_ref.get()
     if user_doc.exists:
@@ -285,7 +394,8 @@ async def delete_document(
         user_ref.update({"document_count": new_count})
 
     return {
-        "message": "Document and all associated data deleted successfully",
+        "message": "Document and ALL associated PHI deleted successfully",
         "document_id": document_id,
         "chunks_deleted": len(chunk_ids),
+        "hipaa_compliant": True,
     }

@@ -44,7 +44,14 @@ export default function SignInPage() {
       setError('');
       setLoading(true);
 
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+
+      // Ensure we have a valid token before making API call
+      const token = await result.user.getIdToken();
+      if (!token) {
+        throw new Error('Failed to get authentication token');
+      }
+
       await api.get('/profile');
       navigate('/dashboard');
     } catch (err) {

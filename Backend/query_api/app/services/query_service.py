@@ -4,11 +4,12 @@ import uuid
 from datetime import datetime
 
 from vertexai.generative_models import GenerativeModel, GenerationConfig
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 
 from app.repositories.firestore_repo import FirestoreRepository
 from app.repositories.vector_repo import VectorRepository
 from app.utils.embeddings import get_embedding
+from app.utils.hipaa_audit import HIPAAAuditLogger
 
 
 class QueryService:
@@ -39,6 +40,7 @@ class QueryService:
         user_id: str,
         chat_id: Optional[str] = None,
         top_k: int = 10,
+        request: Optional[Request] = None,
     ) -> Dict[str, Any]:
         """
         Process a user query using RAG pipeline.
@@ -48,6 +50,7 @@ class QueryService:
             user_id: User ID
             chat_id: Optional chat session ID
             top_k: Number of chunks to retrieve
+            request: FastAPI request object (for audit logging)
 
         Returns:
             Dict with answer, sources, and chat_id
@@ -62,18 +65,23 @@ class QueryService:
         chat = self._get_or_create_chat(user_id, chat_id)
         chat_id = chat["chat_id"]
 
-        # 3. Generate query embedding
-        query_embedding = get_embedding(question)
+        # 3. Enhance query with chat history context
+        enhanced_question = self._enhance_query(question, chat_id)
 
-        # 4. Search vector index
+        # 4. Generate query embedding from enhanced question
+        query_embedding = get_embedding(enhanced_question)
+
+        # 5. Search vector index
+        # Increased from 100 to 200 to handle orphaned vectors from cleanup
+        # This ensures we retrieve enough candidates to find valid chunks
         neighbors = self.vector_repo.find_neighbors(
-            query_embedding=query_embedding, num_neighbors=100
+            query_embedding=query_embedding, num_neighbors=200
         )
 
         if not neighbors:
             raise HTTPException(status_code=404, detail="No relevant documents found")
 
-        # 5. Retrieve and filter chunks from Firestore
+        # 6. Retrieve and filter chunks from Firestore
         chunks, sources = self._retrieve_user_chunks(neighbors, user_id, top_k)
 
         if not chunks:
@@ -82,17 +90,87 @@ class QueryService:
                 detail="No documents found for your account. Please upload a medical document first.",
             )
 
-        # 6. Generate answer with LLM
+        # 7. Generate answer with LLM
         answer = self._generate_answer(question, chunks)
 
-        # 7. Save messages to Firestore
+        # 8. Save messages to Firestore
         self._save_messages(chat_id, user_id, question, answer, sources)
 
-        # 8. Update chat metadata
+        # 9. Update chat metadata
         self.firestore_repo.update_chat_timestamp(chat_id)
         self.firestore_repo.increment_message_count(chat_id, count=2)
 
+        # 10. HIPAA Audit: Log PHI access via query
+        if request:
+            audit_logger = HIPAAAuditLogger(self.firestore_repo.db)
+            document_ids = list(set(s.get("document_id") for s in sources if s.get("document_id")))
+            audit_logger.log_query(
+                user_id=user_id,
+                query_text=question,
+                documents_accessed=document_ids,
+                request=request,
+            )
+
         return {"answer": answer, "sources": sources, "chat_id": chat_id}
+
+    def _enhance_query(self, question: str, chat_id: str) -> str:
+        """
+        Enhance query with chat history context to improve retrieval.
+
+        Args:
+            question: Original user question
+            chat_id: Current chat session ID
+
+        Returns:
+            Enhanced question with context
+        """
+        # Get recent chat history (last 5 messages)
+        messages = self.firestore_repo.get_chat_messages(chat_id, limit=5)
+
+        # If no history, return original question
+        if not messages or len(messages) <= 1:
+            return question
+
+        # Build conversation context (exclude current question)
+        context_parts = []
+        for msg in messages[:-1]:  # Exclude the last message (which is the current one)
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+            if role == "user":
+                context_parts.append(f"User: {content}")
+            elif role == "assistant":
+                context_parts.append(f"Assistant: {content}")
+
+        if not context_parts:
+            return question
+
+        conversation_context = "\n".join(context_parts)
+
+        # Use LLM to rewrite question with context
+        prompt = f"""Given the following conversation history and a new question, rewrite the question to be standalone and context-rich for better document retrieval.
+
+Conversation History:
+{conversation_context}
+
+New Question: {question}
+
+Instructions:
+- Rewrite the question to include relevant context from the conversation history
+- Make the question self-contained so it can be understood without the conversation history
+- Keep medical terminology and specific details
+- If the question already has enough context, return it as-is
+- Keep the rewritten question concise (1-2 sentences max)
+
+Rewritten Question:"""
+
+        try:
+            response = self.llm.generate_content(prompt)
+            enhanced = response.text.strip()
+            print(f"✓ Enhanced query: '{question}' → '{enhanced}'")
+            return enhanced
+        except Exception as e:
+            print(f"Warning: Query enhancement failed, using original: {e}")
+            return question
 
     def _check_processing_documents(self, user_id: str) -> None:
         """Check if user has documents still processing."""

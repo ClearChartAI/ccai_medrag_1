@@ -48,6 +48,7 @@ async def query_endpoint(
     - Retrieves relevant document chunks
     - Generates answer using Gemini
     - Saves chat history
+    - Logs PHI access (HIPAA §164.312(b) - Audit Controls)
     """
     # Ensure user profile exists (creates if needed)
     await ensure_user_profile(current_user, firestore_repo)
@@ -57,6 +58,7 @@ async def query_endpoint(
         user_id=current_user.uid,
         chat_id=query_request.chat_id,
         top_k=query_request.top_k,
+        request=request,
     )
 
     return QueryResponse(**result)

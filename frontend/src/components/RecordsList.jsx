@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { FileText, ArrowRight, Loader2, UploadCloud, Eye } from 'lucide-react'
+import { FileText, Loader2, UploadCloud, Eye, FileTextIcon, X, FolderOpen } from 'lucide-react'
 
 const badgeStyles = {
   pending: 'bg-orange-100 text-orange-600 border border-orange-200',
@@ -7,20 +8,75 @@ const badgeStyles = {
   default: 'bg-slate-100 text-slate-500 border border-slate-200',
 }
 
-const RecordsList = ({ documents = [], isUploading, onUpload, onViewDocument }) => {
+const RecordsList = ({ documents = [], isUploading, onUpload, onViewDocument, onViewSummary }) => {
   const hasDocuments = documents.length > 0
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Default to expanded (false) if not set
+    const saved = localStorage.getItem('recordsCollapsed')
+    return saved === 'true'
+  })
+
+  const toggleRecords = () => {
+    setIsCollapsed(prev => {
+      const newValue = !prev
+      localStorage.setItem('recordsCollapsed', newValue)
+      return newValue
+    })
+  }
 
   return (
-    <aside className="flex h-full w-full max-w-[320px] flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 px-6 py-6 text-slate-700 border-l border-teal-100">
-      <header className="flex items-center justify-between border-b border-teal-200 pb-4">
-        <h2 className="text-lg font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">Your Records</h2>
-      </header>
+    <div className="relative h-screen">
+      {/* Folder Icon Button - Shows when collapsed */}
+      {isCollapsed && (
+        <div className="fixed right-6 top-6 z-50">
+          <button
+            onClick={toggleRecords}
+            className="flex items-center justify-center rounded-lg bg-white shadow-lg hover:shadow-xl transition-all p-3 border border-slate-200 hover:border-teal-300"
+            title="Show records"
+          >
+            <FolderOpen size={22} className="text-teal-600" />
+          </button>
+        </div>
+      )}
 
-      <div className="mt-6 flex-1 space-y-4 overflow-y-auto pr-1">
+      {/* Upload Button Peek - Shows when collapsed */}
+      {isCollapsed && (
+        <div className="fixed right-6 bottom-6 z-50">
+          <button
+            type="button"
+            onClick={onUpload}
+            className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:from-teal-600 hover:to-cyan-600 hover:shadow-xl transition"
+            title="Upload document"
+          >
+            <UploadCloud size={18} />
+            <span>Upload</span>
+          </button>
+        </div>
+      )}
+
+      {/* Records Panel */}
+      <aside className={`flex h-screen flex-col bg-white/50 backdrop-blur-sm text-slate-700 border-l border-slate-200 overflow-hidden ${
+        isCollapsed ? 'w-0' : 'w-96'
+      }`}>
+        <header className="border-b border-slate-200 px-6 py-6">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-bold text-slate-900">Your Records</h2>
+            <button
+              onClick={toggleRecords}
+              className="flex items-center justify-center rounded-lg bg-slate-50 hover:bg-red-50 transition-all p-1.5 border border-slate-200 hover:border-red-300 group"
+              title="Close records"
+            >
+              <X size={18} className="text-slate-600 group-hover:text-red-600" />
+            </button>
+          </div>
+          <p className="text-xs text-slate-500">{documents.length} documents</p>
+        </header>
+
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
         {isUploading && (
-          <div className="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm text-teal-600 shadow-sm border border-teal-200">
-            <Loader2 className="animate-spin" size={18} />
-            <span>Processing new document...</span>
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-600 border border-teal-200">
+            <Loader2 className="animate-spin" size={16} />
+            <span>Processing...</span>
           </div>
         )}
 
@@ -28,73 +84,68 @@ const RecordsList = ({ documents = [], isUploading, onUpload, onViewDocument }) 
           documents.map((doc) => (
             <div
               key={doc.document_id || doc.id || doc.filename}
-              className="flex flex-col gap-2 rounded-xl bg-white px-4 py-3 shadow-sm border border-teal-100 hover:shadow-md transition"
+              className="rounded-lg bg-white px-3 py-3 shadow-sm border border-slate-200 hover:border-teal-300 hover:shadow-md transition"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3">
-                  <div className="rounded-lg bg-gradient-to-br from-teal-100 to-cyan-100 p-2 text-teal-600">
-                    <FileText size={18} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">{doc.name}</p>
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <span>{doc.date}</span>
-                      {doc.file_size ? (
-                        <>
-                          <span>•</span>
-                          <span>{Math.max(doc.file_size / 1024, 1).toFixed(0)} KB</span>
-                        </>
-                      ) : null}
-                      {doc.page_count ? (
-                        <>
-                          <span>•</span>
-                          <span>{doc.page_count} pages</span>
-                        </>
-                      ) : null}
-                    </div>
-                  </div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="rounded-md bg-teal-100 p-1.5 text-teal-600">
+                  <FileText size={14} />
                 </div>
+                <p className="flex-1 text-sm font-medium text-slate-900 truncate" title={doc.name}>
+                  {doc.name}
+                </p>
                 <span
-                  className={`rounded-full px-3 py-1 text-[11px] font-semibold capitalize ${
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${
                     badgeStyles[doc.status] || badgeStyles.default
                   }`}
                 >
                   {doc.status}
                 </span>
               </div>
-              {onViewDocument && (
-                <button
-                  onClick={() => onViewDocument(doc)}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-xs font-medium text-teal-700 hover:bg-teal-100 transition border border-teal-200"
-                >
-                  <Eye size={14} />
-                  <span>View Document</span>
-                </button>
-              )}
+
+              {/* View and Summary Buttons */}
+              <div className="flex gap-2">
+                {onViewDocument && (
+                  <button
+                    onClick={() => onViewDocument(doc)}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-md bg-teal-50 px-2 py-1.5 text-xs font-medium text-teal-700 hover:bg-teal-100 transition border border-teal-200"
+                  >
+                    <Eye size={12} />
+                    <span>View</span>
+                  </button>
+                )}
+                {onViewSummary && (
+                  <button
+                    onClick={() => onViewSummary(doc)}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-md bg-cyan-50 px-2 py-1.5 text-xs font-medium text-cyan-700 hover:bg-cyan-100 transition border border-cyan-200"
+                  >
+                    <FileTextIcon size={12} />
+                    <span>Summary</span>
+                  </button>
+                )}
+              </div>
             </div>
           ))}
 
         {!hasDocuments && !isUploading && (
-          <div className="rounded-xl border border-dashed border-teal-300 bg-white px-4 py-8 text-center text-sm text-slate-400">
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-xs text-slate-400">
             No documents yet. Upload your first medical record to get started.
           </div>
         )}
       </div>
 
-      <footer className="flex items-center justify-between border-t border-teal-200 pt-4 text-xs text-slate-500">
-        <span>{documents.length} Documents Synced</span>
-        <ArrowRight size={16} className="text-teal-400" />
-      </footer>
-
-      <button
-        type="button"
-        onClick={onUpload}
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 px-4 py-3 text-sm font-semibold text-white shadow-md hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg transition"
-      >
-        <UploadCloud size={18} />
-        <span>+ Upload Document</span>
-      </button>
+      {/* Upload button fixed to bottom */}
+      <div className="border-t border-slate-200 px-6 py-4 bg-white/80 backdrop-blur-sm">
+        <button
+          type="button"
+          onClick={onUpload}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-3 text-sm font-semibold text-white shadow-md hover:from-teal-600 hover:to-cyan-600 hover:shadow-lg transition"
+        >
+          <UploadCloud size={18} />
+          <span>Upload Document</span>
+        </button>
+      </div>
     </aside>
+    </div>
   )
 }
 
@@ -103,6 +154,7 @@ RecordsList.propTypes = {
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
   onViewDocument: PropTypes.func,
+  onViewSummary: PropTypes.func,
 }
 
 export default RecordsList

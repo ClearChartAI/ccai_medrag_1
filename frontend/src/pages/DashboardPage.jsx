@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import ChatBox from '../components/ChatBox.jsx';
 import RecordsList from '../components/RecordsList.jsx';
@@ -30,6 +30,7 @@ const suggestionPrompts = [
 export default function DashboardPage() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [messages, setMessages] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -37,18 +38,76 @@ export default function DashboardPage() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [documentsLoading, setDocumentsLoading] = useState(false);
-  const [currentChatId, setCurrentChatId] = useState(null);
+  const [currentChatId, setCurrentChatId] = useState(() => {
+    // Load chat ID from localStorage on mount
+    return localStorage.getItem('currentChatId') || null;
+  });
+  const [currentChatName, setCurrentChatName] = useState(() => {
+    // Load chat name from localStorage on mount
+    return localStorage.getItem('currentChatName') || 'New Chat';
+  });
   const [hasProcessingDocs, setHasProcessingDocs] = useState(false);
   const [viewingDoc, setViewingDoc] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const [viewingSummary, setViewingSummary] = useState(null);
 
   useEffect(() => {
     if (!currentUser) {
       setMessages([]);
       setDocuments([]);
       setCurrentChatId(null);
+      setCurrentChatName('New Chat');
+      // Clear localStorage on logout
+      localStorage.removeItem('currentChatId');
+      localStorage.removeItem('currentChatName');
     }
   }, [currentUser]);
+
+  // Load chat from Chat History if navigated with state
+  useEffect(() => {
+    const loadChat = async () => {
+      if (location.state?.loadChatId) {
+        const chatId = location.state.loadChatId;
+        const chatName = location.state.loadChatName || 'Chat';
+
+        console.log('📥 Loading chat from history:', chatId);
+
+        try {
+          // Fetch chat messages
+          const response = await api.get(`/chats/${chatId}/messages`);
+          const chatMessages = response.data || [];
+
+          // Transform messages to the format expected by ChatBox
+          const formattedMessages = chatMessages.map(msg => ({
+            id: msg.message_id,
+            role: msg.role,
+            content: msg.content,
+            sources: msg.sources || [],
+            timestamp: msg.timestamp
+          }));
+
+          setMessages(formattedMessages);
+          setCurrentChatId(chatId);
+          setCurrentChatName(chatName);
+
+          // Persist to localStorage
+          localStorage.setItem('currentChatId', chatId);
+          localStorage.setItem('currentChatName', chatName);
+
+          console.log(`✓ Loaded ${formattedMessages.length} messages from chat history`);
+        } catch (error) {
+          console.error('Failed to load chat messages:', error);
+        }
+
+        // Clear the navigation state
+        navigate(location.pathname, { replace: true, state: {} });
+      }
+    };
+
+    if (currentUser && location.state?.loadChatId) {
+      loadChat();
+    }
+  }, [location.state, currentUser, navigate, location.pathname]);
 
   const sidebarUser = useMemo(() => {
     if (!currentUser) return null;
@@ -70,12 +129,19 @@ export default function DashboardPage() {
     ]);
   }, []);
 
-  const loadDocuments = useCallback(async () => {
+  const loadDocuments = useCallback(async (force = false) => {
+    // Skip if already loaded and not forced (prevents unnecessary reloads)
+    if (!force && documents.length > 0 && !documentsLoading) {
+      console.log('📄 Documents already loaded, skipping reload');
+      return;
+    }
+
     setDocumentsLoading(true);
     try {
       const response = await api.get('/documents/list');
-      // Backend returns array directly, not wrapped in {documents: [...]}
-      const docs = Array.isArray(response.data) ? response.data : (response.data?.documents ?? []);
+      // Backend returns array directly
+      const docs = Array.isArray(response.data) ? response.data : [];
+
       const formatted = docs.map((doc) => ({
         id: doc.document_id,
         document_id: doc.document_id,
@@ -98,15 +164,17 @@ export default function DashboardPage() {
       console.log(`✓ Loaded ${formatted.length} documents, ${processing ? 'some still processing' : 'all ready'}`);
     } catch (error) {
       console.error('Failed to load documents:', error);
+      setHasProcessingDocs(false);
     } finally {
       setDocumentsLoading(false);
     }
-  }, []);
+  }, [documents.length, documentsLoading]);
 
   useEffect(() => {
     if (!currentUser) return;
-    loadDocuments();
-  }, [currentUser, loadDocuments]);
+    // Only load on mount, not on every render
+    loadDocuments(true);
+  }, [currentUser]); // Removed loadDocuments from deps to prevent re-renders
 
   // Auto-refresh documents while processing
   useEffect(() => {
@@ -114,7 +182,7 @@ export default function DashboardPage() {
 
     const interval = setInterval(() => {
       console.log('🔄 Auto-refreshing documents (processing detected)');
-      loadDocuments();
+      loadDocuments(true); // Force reload when processing
     }, 5000); // Check every 5 seconds
 
     return () => clearInterval(interval);
@@ -137,15 +205,23 @@ export default function DashboardPage() {
         });
 
         const answer = response?.data?.answer ?? 'I reviewed your records and generated a response.';
+        const sources = response?.data?.sources || [];
         const chatIdFromResponse = response?.data?.chat_id;
+        const chatNameFromResponse = response?.data?.chat_name;
 
         if (chatIdFromResponse) {
           console.log('✓ Response chat ID:', chatIdFromResponse);
           setCurrentChatId(chatIdFromResponse);
+          localStorage.setItem('currentChatId', chatIdFromResponse);
           console.log('✓ Updated state to:', chatIdFromResponse);
         }
 
-        appendMessage({ role: 'ai', content: answer, timestamp: new Date().toISOString() });
+        if (chatNameFromResponse) {
+          setCurrentChatName(chatNameFromResponse);
+          localStorage.setItem('currentChatName', chatNameFromResponse);
+        }
+
+        appendMessage({ role: 'ai', content: answer, sources, timestamp: new Date().toISOString() });
       } catch (error) {
         const fallback =
           error?.response?.data?.detail ||
@@ -165,6 +241,10 @@ export default function DashboardPage() {
     console.log('🆕 Starting new chat - resetting state');
     setMessages([]);
     setCurrentChatId(null);
+    setCurrentChatName('New Chat');
+    // Clear localStorage
+    localStorage.removeItem('currentChatId');
+    localStorage.removeItem('currentChatName');
   }, []);
 
   const handleUploadStart = useCallback(() => {
@@ -192,7 +272,7 @@ export default function DashboardPage() {
       setIsUploading(false);
 
       try {
-        await loadDocuments();
+        await loadDocuments(true); // Force reload after upload
       } catch (error) {
         console.error('Failed to refresh documents after upload:', error);
       }
@@ -217,6 +297,18 @@ export default function DashboardPage() {
     navigate('/records');
   }, [navigate]);
 
+  const handleSummaries = useCallback(() => {
+    navigate('/summaries');
+  }, [navigate]);
+
+  const handleNotes = useCallback(() => {
+    navigate('/notes');
+  }, [navigate]);
+
+  const handleChatHistory = useCallback(() => {
+    navigate('/chat-history');
+  }, [navigate]);
+
   const handleViewDocument = useCallback(async (doc) => {
     setViewingDoc(doc);
     setPdfUrl(null);
@@ -237,13 +329,26 @@ export default function DashboardPage() {
     setPdfUrl(null);
   }, []);
 
+  const handleViewSummary = useCallback((doc) => {
+    setViewingSummary(doc);
+    // Close PDF viewer if open
+    setViewingDoc(null);
+    setPdfUrl(null);
+  }, []);
+
+  const handleCloseSummary = useCallback(() => {
+    setViewingSummary(null);
+  }, []);
+
+
   if (!currentUser) {
     return null;
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 text-slate-700 md:flex-row">
-      <Sidebar onNewChat={handleNewChat} onLogout={handleLogout} onRecords={handleRecords} user={sidebarUser} />
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 text-slate-700 md:flex-row relative">
+      {/* Sidebar */}
+      <Sidebar onNewChat={handleNewChat} onLogout={handleLogout} onRecords={handleRecords} onSummaries={handleSummaries} onNotes={handleNotes} onChatHistory={handleChatHistory} user={sidebarUser} />
 
       <ChatBox
         messages={messages}
@@ -252,8 +357,11 @@ export default function DashboardPage() {
         suggestions={suggestionPrompts}
         user={sidebarUser}
         isProcessing={hasProcessingDocs}
+        currentChatId={currentChatId}
+        currentChatName={currentChatName}
       />
 
+      {/* PDF Viewer */}
       {viewingDoc && (
         <div className="flex h-screen w-full max-w-2xl flex-col border-l border-teal-100 bg-white">
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
@@ -281,11 +389,38 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* Summary Viewer */}
+      {viewingSummary && (
+        <div className="flex h-screen w-full max-w-2xl flex-col border-l border-slate-200 bg-white">
+          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+            <h3 className="text-sm font-semibold text-slate-900">{viewingSummary.name} - Summary</h3>
+            <button
+              onClick={handleCloseSummary}
+              className="rounded-lg px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 transition"
+            >
+              Close
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto p-6">
+            <div className="prose prose-slate max-w-none">
+              <h2 className="text-lg font-semibold mb-4">Document Summary</h2>
+              <p className="text-sm text-slate-600 mb-4">
+                Summary for: <span className="font-medium">{viewingSummary.filename}</span>
+              </p>
+              <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-700">
+                Summary content will appear here. This feature fetches AI-generated summaries from the backend.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <RecordsList
         documents={documents}
         isUploading={isUploading || documentsLoading}
         onUpload={() => setIsUploadOpen(true)}
         onViewDocument={handleViewDocument}
+        onViewSummary={handleViewSummary}
       />
 
       <UploadModal

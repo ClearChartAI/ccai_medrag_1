@@ -26,8 +26,17 @@ export default function LoginPage() {
       setError('');
       setLoading(true);
 
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+
+      // Ensure we have a valid token before making API call
+      const token = await result.user.getIdToken();
+      if (!token) {
+        throw new Error('Failed to get authentication token');
+      }
+
+      console.log('✓ Got Firebase token, calling /profile');
       await api.get('/profile');
+      console.log('✓ Profile loaded, navigating to dashboard');
       navigate('/dashboard');
     } catch (err) {
       console.error('Google login failed:', err);

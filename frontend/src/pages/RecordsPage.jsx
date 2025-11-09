@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Trash2, Eye, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
+import { FileText, Trash2, Eye, AlertCircle, Loader2, ArrowLeft, CheckCircle } from 'lucide-react';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
@@ -44,6 +44,7 @@ export default function RecordsPage() {
   const [deletingId, setDeletingId] = useState(null);
   const [viewingDoc, setViewingDoc] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const [deleteSuccess, setDeleteSuccess] = useState(null);
 
   const loadDocuments = useCallback(async () => {
     if (!currentUser) return;
@@ -79,6 +80,11 @@ export default function RecordsPage() {
 
   const handleDelete = async (documentId) => {
     setDeletingId(documentId);
+
+    // Find the document to get its name before deletion
+    const docToDelete = documents.find((doc) => doc.document_id === documentId);
+    const docName = docToDelete?.title || docToDelete?.filename || 'document';
+
     try {
       await api.delete(`/documents/${documentId}`);
       setDocuments((prev) => prev.filter((doc) => doc.document_id !== documentId));
@@ -86,6 +92,14 @@ export default function RecordsPage() {
       if (viewingDoc?.document_id === documentId) {
         setViewingDoc(null);
       }
+
+      // Show success notification
+      setDeleteSuccess(`Successfully deleted "${docName}"`);
+
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => {
+        setDeleteSuccess(null);
+      }, 5000);
     } catch (error) {
       console.error('Failed to delete document:', error);
       alert('Failed to delete document. Please try again.');
@@ -150,6 +164,16 @@ export default function RecordsPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
+        {/* Success Banner */}
+        {deleteSuccess && (
+          <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex items-center gap-3">
+              <CheckCircle size={18} className="text-green-600 flex-shrink-0" />
+              <p className="text-sm font-medium text-green-800">{deleteSuccess}</p>
+            </div>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
             <Loader2 size={48} className="animate-spin text-teal-500" />
@@ -238,15 +262,24 @@ export default function RecordsPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => setDeleteConfirmId(null)}
-                          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                          disabled={deletingId === doc.document_id}
+                          className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={() => handleDelete(doc.document_id)}
-                          className="flex-1 rounded-lg bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600"
+                          disabled={deletingId === doc.document_id}
+                          className="flex-1 rounded-lg bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                          Delete
+                          {deletingId === doc.document_id ? (
+                            <>
+                              <Loader2 size={14} className="animate-spin" />
+                              <span>Deleting...</span>
+                            </>
+                          ) : (
+                            'Delete'
+                          )}
                         </button>
                       </div>
                     </div>

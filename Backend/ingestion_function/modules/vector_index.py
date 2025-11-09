@@ -117,7 +117,10 @@ class VectorIndexUploader:
         for i, doc in enumerate(documents):
             chunk_id = str(uuid.uuid4())
 
+            # Store chunks in TOP-LEVEL collection (not subcollection)
+            # This matches the query code expectation in firestore_repo.py
             doc_ref = self.db.collection("chunks").document(chunk_id)
+
             batch.set(
                 doc_ref,
                 {
