@@ -4,18 +4,18 @@ import './Mission.css';
 const Mission = () => {
   const teamMembers = [
     {
-      name: 'Nicholas Davis',
-      role: ' “Every day, I see how patients struggle to make sense of their records. ClearChartAI bridges that gap, giving them understanding and helping patients own their future',
+      name: 'Nicholas Davis,  AGACNP',
+      role: ' “Every day, I see how patients struggle to make sense of their records. ClearChartAI bridges that gap, giving them understanding and helping patients own their future"',
   
     },
     {
-      name: 'Dr Alkhatib MD',
-      role: '“Medicine moves fast, but clarity shouldn’t be left behind. When my patients understand their data, care becomes a partnership, not a mystery',
+      name: 'Dr.Alkhatib, MD',
+      role: '“Medicine moves fast, but clarity shouldn’t be left behind. When my patients understand their data, care becomes a partnership, not a mystery"',
       image: 'https://via.placeholder.com/200?text=Dhruv+Suraj'
     },
     {
-      name: 'Jacob Pfetsch FNP',
-      role: 'Information means nothing without context. ClearChartAI translates medical language into plain, human terms, so patients can focus on what truly matters: getting better',
+      name: 'Jacob Pfetsch, FNP',
+      role: '"Information means nothing without context. ClearChartAI translates medical language into plain, human terms, so patients can focus on what truly matters: getting better"',
       image: 'https://via.placeholder.com/200?text=Vishnu+Koraganji'
     }
   ];

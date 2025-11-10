@@ -41,6 +41,9 @@ const AboutTimeline = () => {
 
   return (
     <section className="about-timeline" id="about-section">
+      <div className="about-us-header">
+        <h2 className="about-us-title">About Us</h2>
+      </div>
       <div className="timeline-header fade-in-up" ref={headerRef}>
         <div className="timeline-years-horizontal">
           {years.map((year) => (
