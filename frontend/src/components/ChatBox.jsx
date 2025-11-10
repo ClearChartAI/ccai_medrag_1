@@ -97,7 +97,7 @@ const ChatBubble = ({ message, currentChatId, currentChatName, onPinSuccess }) =
       <div
         className={`max-w-[80%] rounded-2xl px-6 py-4 shadow-md ${
           isUser
-            ? 'bg-gradient-to-br from-teal-500 to-cyan-500 text-white'
+            ? 'bg-gradient-to-br from-purple-500 via-indigo-500 to-teal-500 text-white'
             : 'bg-white text-slate-900 border border-slate-200'
         }`}
       >
@@ -218,7 +218,7 @@ ChatBubble.propTypes = {
 const TypingIndicator = () => (
   <div className="flex justify-start mb-6">
     <div className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 rounded-2xl shadow-md">
-      <Sparkles className="text-teal-500 animate-pulse" size={20} />
+      <Sparkles className="text-purple-500 animate-pulse" size={20} />
       <span className="text-sm text-slate-600 font-medium">Clari is thinking...</span>
     </div>
   </div>
@@ -260,7 +260,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
   }
 
   return (
-    <section className="flex h-screen flex-1 flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50 relative">
+    <section className="flex h-screen flex-1 flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50 relative">
       {/* Messages Area */}
       <div
         ref={messagesContainerRef}
@@ -270,7 +270,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
           // Empty State - Premium Design
           <div className="flex h-full flex-col items-center justify-center space-y-8">
             <div className="text-center space-y-4">
-              <h3 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              <h3 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent">
                 Hey {getUserFirstName()}!
               </h3>
               <p className="text-sm text-slate-600 max-w-md">
@@ -295,7 +295,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-teal-100">
+              <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-purple-100">
                 <div className="flex items-center gap-3 px-6 py-4">
                   <input
                     type="text"
@@ -312,7 +312,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
                   <button
                     type="submit"
                     disabled={isLoading || isProcessing || !inputValue.trim()}
-                    className="flex items-center justify-center rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 p-2.5 text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
+                    className="flex items-center justify-center rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 p-2.5 text-white shadow-md transition hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
                     title="Send message"
                   >
                     <ArrowUp size={18} />
@@ -329,7 +329,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
                   type="button"
                   onClick={() => handleSuggestion(suggestion)}
                   disabled={isLoading || isProcessing}
-                  className="rounded-full bg-white border border-teal-200 px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-teal-400 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 hover:text-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-full bg-white border border-purple-200 px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:via-indigo-50 hover:to-teal-50 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {suggestion}
                 </button>
@@ -371,7 +371,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-teal-100">
+          <form onSubmit={handleSubmit} className="bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-purple-100">
             <div className="flex items-center gap-3 px-6 py-4">
               <input
                 type="text"
@@ -388,7 +388,7 @@ const ChatBox = ({ messages, onSend, isLoading, suggestions = [], user = null, i
               <button
                 type="submit"
                 disabled={isLoading || isProcessing || !inputValue.trim()}
-                className="flex items-center justify-center rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 p-2.5 text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
+                className="flex items-center justify-center rounded-full bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 p-2.5 text-white shadow-md transition hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500 hover:shadow-lg disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-300"
                 title="Send message"
               >
                 <ArrowUp size={18} />

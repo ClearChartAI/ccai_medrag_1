@@ -92,7 +92,7 @@ const ChatHistoryPage = () => {
   })
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
       {/* Sidebar - Chat List (Grok Style) */}
       <div className="w-64 border-r border-slate-200 bg-white flex flex-col">
         {/* Header */}
@@ -136,8 +136,8 @@ const ChatHistoryPage = () => {
                   onClick={() => setSelectedChat(chat)}
                   className={`group relative rounded-lg px-3 py-2 mb-1 cursor-pointer transition-colors ${
                     selectedChat?.chat_id === chat.chat_id
-                      ? 'bg-slate-100'
-                      : 'hover:bg-slate-50'
+                      ? 'bg-gradient-to-r from-purple-100 to-teal-100'
+                      : 'hover:bg-purple-50'
                   }`}
                 >
                   <div className="flex items-start gap-2">
@@ -159,7 +159,7 @@ const ChatHistoryPage = () => {
                         e.stopPropagation()
                         handleContinueChat(chat)
                       }}
-                      className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 transition"
+                      className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-md bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-500 px-3 py-1.5 text-xs font-medium text-white hover:from-purple-600 hover:via-indigo-600 hover:to-teal-600 transition"
                     >
                       <span>Continue Chat</span>
                       <ArrowRight size={14} />
@@ -187,7 +187,7 @@ const ChatHistoryPage = () => {
                 </div>
                 <button
                   onClick={() => handleContinueChat(selectedChat)}
-                  className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition"
+                  className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-500 px-4 py-2 text-sm font-medium text-white hover:from-purple-600 hover:via-indigo-600 hover:to-teal-600 transition"
                 >
                   <span>Continue</span>
                   <ArrowRight size={16} />
@@ -211,7 +211,7 @@ const ChatHistoryPage = () => {
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                           message.role === 'user'
-                            ? 'bg-slate-900 text-white'
+                            ? 'bg-gradient-to-br from-purple-500 via-indigo-500 to-teal-500 text-white'
                             : 'bg-white text-slate-900 border border-slate-200'
                         }`}
                       >

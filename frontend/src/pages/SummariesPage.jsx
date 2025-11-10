@@ -65,32 +65,32 @@ export default function SummariesPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-50">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
       {/* Header */}
-      <div className="border-b border-teal-100 bg-white/80 backdrop-blur-sm px-6 py-4 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              Document Summaries
-            </h1>
-            <p className="mt-1 text-xs text-slate-600">
-              AI-generated summaries of your medical documents
-            </p>
-          </div>
+      <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
+        <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-teal-50 transition"
+            className="flex items-center gap-2 text-slate-600 hover:text-purple-600 transition"
           >
-            <ArrowLeft size={18} />
-            <span>Back to Dashboard</span>
+            <ArrowLeft size={20} />
+            <span className="text-sm font-medium">Back to Dashboard</span>
           </button>
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
+            Document Summaries
+          </h1>
+          <p className="text-sm text-slate-600">
+            AI-generated summaries of your medical documents
+          </p>
         </div>
       </div>
 
       {/* Loading State */}
       {isLoading && (
         <div className="flex h-full items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-teal-600" />
+          <Loader2 className="h-12 w-12 animate-spin text-purple-600" />
         </div>
       )}
 
@@ -117,7 +117,7 @@ export default function SummariesPage() {
             </p>
             <button
               onClick={() => navigate('/dashboard')}
-              className="mt-6 rounded-lg bg-gradient-to-r from-teal-400 to-cyan-400 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-teal-500 hover:to-cyan-500"
+              className="mt-6 rounded-lg bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500"
             >
               Go to Dashboard
             </button>
@@ -129,7 +129,7 @@ export default function SummariesPage() {
       {!isLoading && !error && documents.length > 0 && (
         <div className="flex flex-1 overflow-hidden">
           {/* Left Sidebar - Document List */}
-          <div className="w-80 flex-shrink-0 overflow-y-auto border-r border-teal-100 bg-white/50 p-4">
+          <div className="w-80 flex-shrink-0 overflow-y-auto border-r border-purple-100 bg-white/50 p-4">
             <h2 className="mb-3 text-sm font-semibold text-slate-700 uppercase tracking-wide">Documents</h2>
             <div className="space-y-2">
               {documents.map((doc) => (
@@ -141,14 +141,14 @@ export default function SummariesPage() {
                   }}
                   className={`w-full text-left rounded-lg p-3 transition ${
                     selectedDoc?.id === doc.id
-                      ? 'bg-gradient-to-r from-teal-100 to-cyan-100 border border-teal-200 shadow-sm'
-                      : 'bg-white border border-slate-200 hover:border-teal-300 hover:bg-teal-50'
+                      ? 'bg-gradient-to-r from-purple-100 via-indigo-100 to-teal-100 border border-purple-200 shadow-sm'
+                      : 'bg-white border border-slate-200 hover:border-purple-300 hover:bg-purple-50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <FileText size={14} className="flex-shrink-0 text-teal-600" />
+                        <FileText size={14} className="flex-shrink-0 text-purple-600" />
                         <p className="truncate text-sm font-medium text-slate-900" title={doc.filename}>
                           {doc.filename || 'Untitled Document'}
                         </p>
@@ -184,7 +184,7 @@ export default function SummariesPage() {
                   </div>
                   <button
                     onClick={() => handleViewPdf(selectedDoc)}
-                    className="flex items-center gap-2 rounded-lg border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-medium text-teal-700 hover:bg-teal-100 transition"
+                    className="flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition"
                   >
                     <Eye size={16} />
                     <span>View Document</span>
@@ -243,7 +243,7 @@ export default function SummariesPage() {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">
-                    <Loader2 size={48} className="animate-spin text-teal-500" />
+                    <Loader2 size={48} className="animate-spin text-purple-500" />
                   </div>
                 )}
               </div>

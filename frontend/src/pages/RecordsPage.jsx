@@ -130,7 +130,7 @@ export default function RecordsPage() {
 
   if (!currentUser) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
+      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
         <div className="text-center">
           <AlertCircle size={48} className="mx-auto mb-4 text-red-500" />
           <p className="text-lg text-slate-700">Please log in to view your records</p>
@@ -140,25 +140,25 @@ export default function RecordsPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
       {/* Header */}
-      <div className="border-b border-teal-100 bg-white/80 backdrop-blur-sm px-6 py-4 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleBackToDashboard}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-teal-50 transition"
-            >
-              <ArrowLeft size={18} />
-              <span>Back to Dashboard</span>
-            </button>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-              My Records
-            </h1>
-          </div>
-          <div className="text-sm text-slate-500">
-            {documents.length} {documents.length === 1 ? 'document' : 'documents'}
-          </div>
+      <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
+        <div className="flex items-center gap-4 mb-4">
+          <button
+            onClick={handleBackToDashboard}
+            className="flex items-center gap-2 text-slate-600 hover:text-purple-600 transition"
+          >
+            <ArrowLeft size={20} />
+            <span className="text-sm font-medium">Back to Dashboard</span>
+          </button>
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
+            My Records
+          </h1>
+          <p className="text-sm text-slate-600">
+            {documents.length} {documents.length === 1 ? 'document' : 'documents'} uploaded
+          </p>
         </div>
       </div>
 
@@ -176,7 +176,7 @@ export default function RecordsPage() {
 
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
-            <Loader2 size={48} className="animate-spin text-teal-500" />
+            <Loader2 size={48} className="animate-spin text-purple-500" />
           </div>
         ) : documents.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
@@ -185,7 +185,7 @@ export default function RecordsPage() {
             <p className="mb-4 text-sm text-slate-500">Upload your first document to get started</p>
             <button
               onClick={handleBackToDashboard}
-              className="rounded-lg bg-gradient-to-r from-teal-400 to-cyan-400 px-4 py-2 text-sm font-semibold text-white hover:from-teal-500 hover:to-cyan-500"
+              className="rounded-lg bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 px-4 py-2 text-sm font-semibold text-white hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500"
             >
               Go to Dashboard
             </button>
@@ -195,12 +195,12 @@ export default function RecordsPage() {
             {documents.map((doc) => (
               <div
                 key={doc.document_id}
-                className="relative flex flex-col rounded-2xl border border-teal-100 bg-white p-4 shadow-sm hover:shadow-md transition"
+                className="relative flex flex-col rounded-2xl border border-purple-100 bg-white p-4 shadow-sm hover:shadow-md transition"
               >
                 {/* Document Icon & Title */}
                 <div className="mb-3 flex items-start gap-3">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-teal-100 to-cyan-100">
-                    <FileText size={24} className="text-teal-600" />
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-100 via-indigo-100 to-teal-100">
+                    <FileText size={24} className="text-purple-600" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="truncate text-sm font-semibold text-slate-900" title={doc.title}>
@@ -235,7 +235,7 @@ export default function RecordsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleView(doc)}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-sm font-medium text-teal-700 hover:bg-teal-100 transition"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition"
                   >
                     <Eye size={16} />
                     <span>View</span>
@@ -316,7 +316,7 @@ export default function RecordsPage() {
                 />
               ) : (
                 <div className="flex h-full items-center justify-center">
-                  <Loader2 size={48} className="animate-spin text-teal-500" />
+                  <Loader2 size={48} className="animate-spin text-purple-500" />
                 </div>
               )}
             </div>

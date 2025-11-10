@@ -158,19 +158,25 @@ const NotesPage = () => {
   }, [searchQuery, tagFilter])
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-teal-50 via-white to-cyan-50">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
       {/* Header */}
-      <div className="border-b border-teal-100 bg-white/80 backdrop-blur-sm px-8 py-6">
-        <div className="mx-auto max-w-6xl">
+      <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
+        <div className="flex items-center gap-4 mb-4">
           <button
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-slate-600 hover:text-teal-600 transition mb-4"
+            className="flex items-center gap-2 text-slate-600 hover:text-purple-600 transition"
           >
             <ArrowLeft size={20} />
             <span className="text-sm font-medium">Back to Dashboard</span>
           </button>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">My Notes</h1>
-          <p className="text-slate-600">Create, organize, and search your personal notes</p>
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
+            My Notes
+          </h1>
+          <p className="text-sm text-slate-600">
+            Create, organize, and search your personal notes
+          </p>
         </div>
       </div>
 
@@ -186,7 +192,7 @@ const NotesPage = () => {
                 placeholder="Search notes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-3 text-slate-900 placeholder-slate-400 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20"
+                className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-3 text-slate-900 placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20"
               />
             </div>
             <div className="relative w-64">
@@ -196,12 +202,12 @@ const NotesPage = () => {
                 placeholder="Filter by tags..."
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-3 text-slate-900 placeholder-slate-400 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20"
+                className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 py-3 text-slate-900 placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20"
               />
             </div>
             <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 text-white font-semibold shadow-md hover:from-teal-600 hover:to-cyan-600 transition transform hover:scale-105"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-500 px-6 py-3 text-white font-semibold shadow-md hover:from-purple-600 hover:via-indigo-600 hover:to-teal-600 transition transform hover:scale-105"
             >
               <Plus size={20} />
               New Note
@@ -210,25 +216,25 @@ const NotesPage = () => {
 
           {/* Create Note Form */}
           {isCreating && (
-            <div className="rounded-2xl border border-teal-200 bg-white p-6 shadow-lg">
+            <div className="rounded-2xl border border-purple-200 bg-white p-6 shadow-lg">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Create New Note</h3>
               <textarea
                 value={newNoteContent}
                 onChange={(e) => setNewNoteContent(e.target.value)}
                 placeholder="Write your note here..."
-                className="w-full rounded-xl border border-slate-200 p-4 text-slate-900 placeholder-slate-400 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20 min-h-[120px]"
+                className="w-full rounded-xl border border-slate-200 p-4 text-slate-900 placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 min-h-[120px]"
               />
               <input
                 type="text"
                 value={newNoteTags}
                 onChange={(e) => setNewNoteTags(e.target.value)}
                 placeholder="Tags (comma-separated)"
-                className="w-full rounded-xl border border-slate-200 p-3 text-slate-900 placeholder-slate-400 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/20 mt-3"
+                className="w-full rounded-xl border border-slate-200 p-3 text-slate-900 placeholder-slate-400 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-400/20 mt-3"
               />
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={createNote}
-                  className="flex items-center gap-2 rounded-xl bg-teal-500 px-4 py-2 text-white font-semibold hover:bg-teal-600 transition"
+                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-teal-500 px-4 py-2 text-white font-semibold hover:from-purple-600 hover:to-teal-600 transition"
                 >
                   <Save size={18} />
                   Save Note
@@ -251,7 +257,7 @@ const NotesPage = () => {
           <div className="space-y-4">
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-teal-500 border-r-transparent"></div>
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent"></div>
                 <p className="mt-4 text-slate-600">Loading notes...</p>
               </div>
             ) : notes.length === 0 ? (
@@ -281,7 +287,7 @@ const NotesPage = () => {
                       <div className="flex gap-3 mt-4">
                         <button
                           onClick={() => updateNote(note.note_id)}
-                          className="flex items-center gap-2 rounded-xl bg-teal-500 px-4 py-2 text-white font-semibold hover:bg-teal-600 transition"
+                          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-teal-500 px-4 py-2 text-white font-semibold hover:from-purple-600 hover:to-teal-600 transition"
                         >
                           <Save size={18} />
                           Save
@@ -331,7 +337,7 @@ const NotesPage = () => {
                           {note.tags.map((tag, idx) => (
                             <span
                               key={idx}
-                              className="rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-700"
+                              className="rounded-full bg-gradient-to-r from-purple-100 to-teal-100 px-3 py-1 text-xs font-semibold text-purple-700"
                             >
                               {tag}
                             </span>
