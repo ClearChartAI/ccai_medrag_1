@@ -28,12 +28,7 @@
 }
 
 .contact-orb-1 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(135deg, #8d87ba 0%, #6d67a0 100%);
-    top: -100px;
-    left: -100px;
-    animation-delay: 0s;
+    display: none;
 }
 
 .contact-orb-2 {

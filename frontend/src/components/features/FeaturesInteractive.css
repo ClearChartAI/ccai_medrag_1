@@ -310,7 +310,7 @@
 }
 
 .card-description {
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     color: #5a6f7a;
     line-height: 1.6;
     margin-bottom: 2rem;
@@ -328,7 +328,7 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 0.75rem 0;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: #5a6f7a;
     opacity: 0;
     transform: translateX(-20px);
