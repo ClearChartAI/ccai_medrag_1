@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, Loader2, ArrowLeft, AlertCircle, ChevronRight, Eye, X } from 'lucide-react';
+import { FileText, Loader2, AlertCircle, ChevronRight, Eye, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
 import { auth } from '../config/firebase';
 import '../components/UploadModal.css';
+import Sidebar from '../components/Sidebar.jsx';
 
 export default function SummariesPage() {
   const { currentUser } = useAuth();
@@ -61,32 +62,79 @@ export default function SummariesPage() {
     }
   };
 
+  const sidebarUser = useMemo(() => {
+    if (!currentUser) return null;
+    return {
+      name: currentUser.displayName || currentUser.email || 'Signed in',
+      email: currentUser.email || '',
+      picture: currentUser.photoURL || '',
+    };
+  }, [currentUser]);
+
+  const handleNewChat = useCallback(() => {
+    navigate('/dashboard');
+  }, [navigate]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  }, [navigate]);
+
+  const handleRecords = useCallback(() => {
+    navigate('/records');
+  }, [navigate]);
+
+  const handleNotes = useCallback(() => {
+    navigate('/notes');
+  }, [navigate]);
+
+  const handleChatHistory = useCallback(async (chat) => {
+    if (chat && chat.chat_id) {
+      navigate('/dashboard', {
+        state: {
+          loadChatId: chat.chat_id,
+          loadChatName: chat.title || 'Chat'
+        }
+      });
+    } else {
+      navigate('/chat-history');
+    }
+  }, [navigate]);
+
   if (!currentUser) {
     return null;
   }
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
-      {/* Header */}
-      <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
-        <div className="flex items-center gap-4 mb-4">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-slate-600 hover:text-purple-600 transition"
-          >
-            <ArrowLeft size={20} />
-            <span className="text-sm font-medium">Back to Dashboard</span>
-          </button>
+    <div className="flex min-h-screen flex-row bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
+      {/* Sidebar */}
+      <Sidebar
+        onNewChat={handleNewChat}
+        onLogout={handleLogout}
+        onRecords={handleRecords}
+        onSummaries={() => {}}
+        onNotes={handleNotes}
+        onChatHistory={handleChatHistory}
+        user={sidebarUser}
+      />
+
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col">
+        {/* Header */}
+        <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
+              Document Summaries
+            </h1>
+            <p className="text-sm text-slate-600">
+              AI-generated summaries of your medical documents
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
-            Document Summaries
-          </h1>
-          <p className="text-sm text-slate-600">
-            AI-generated summaries of your medical documents
-          </p>
-        </div>
-      </div>
 
       {/* Loading State */}
       {isLoading && (
@@ -271,6 +319,7 @@ export default function SummariesPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

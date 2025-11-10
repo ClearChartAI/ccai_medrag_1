@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Tag, X, GripVertical, Trash2, Edit2, Save, ArrowLeft } from 'lucide-react'
+import { Plus, Search, Tag, X, GripVertical, Trash2, Edit2, Save } from 'lucide-react'
 import { auth } from '../config/firebase'
 import '../components/UploadModal.css'
+import Sidebar from '../components/Sidebar.jsx'
 
 const NotesPage = () => {
   const navigate = useNavigate()
@@ -158,28 +159,76 @@ const NotesPage = () => {
     return () => clearTimeout(delayDebounceFn)
   }, [searchQuery, tagFilter])
 
+  const sidebarUser = useMemo(() => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return null;
+    return {
+      name: currentUser.displayName || currentUser.email || 'Signed in',
+      email: currentUser.email || '',
+      picture: currentUser.photoURL || '',
+    };
+  }, []);
+
+  const handleNewChat = useCallback(() => {
+    navigate('/dashboard');
+  }, [navigate]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  }, [navigate]);
+
+  const handleRecords = useCallback(() => {
+    navigate('/records');
+  }, [navigate]);
+
+  const handleSummaries = useCallback(() => {
+    navigate('/summaries');
+  }, [navigate]);
+
+  const handleChatHistory = useCallback(async (chat) => {
+    if (chat && chat.chat_id) {
+      navigate('/dashboard', {
+        state: {
+          loadChatId: chat.chat_id,
+          loadChatName: chat.title || 'Chat'
+        }
+      });
+    } else {
+      navigate('/chat-history');
+    }
+  }, [navigate]);
+
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
-      {/* Header */}
-      <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
-        <div className="flex items-center gap-4 mb-4">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-slate-600 hover:text-purple-600 transition"
-          >
-            <ArrowLeft size={20} />
-            <span className="text-sm font-medium">Back to Dashboard</span>
-          </button>
+    <div className="flex min-h-screen flex-row bg-gradient-to-br from-purple-50 via-teal-50 to-cyan-50">
+      {/* Sidebar */}
+      <Sidebar
+        onNewChat={handleNewChat}
+        onLogout={handleLogout}
+        onRecords={handleRecords}
+        onSummaries={handleSummaries}
+        onNotes={() => {}}
+        onChatHistory={handleChatHistory}
+        user={sidebarUser}
+      />
+
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col">
+        {/* Header */}
+        <div className="border-b border-purple-100 bg-white/80 backdrop-blur-sm px-8 py-6 shadow-sm">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
+              My Notes
+            </h1>
+            <p className="text-sm text-slate-600">
+              Create, organize, and search your personal notes
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent mb-2">
-            My Notes
-          </h1>
-          <p className="text-sm text-slate-600">
-            Create, organize, and search your personal notes
-          </p>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto px-8 py-6">
@@ -355,6 +404,7 @@ const NotesPage = () => {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   )

@@ -305,8 +305,41 @@ export default function DashboardPage() {
     navigate('/notes');
   }, [navigate]);
 
-  const handleChatHistory = useCallback(() => {
-    navigate('/chat-history');
+  const handleChatHistory = useCallback(async (chat) => {
+    // If chat object is provided, load it directly in dashboard
+    if (chat && chat.chat_id) {
+      console.log('📥 Loading chat from dropdown:', chat.chat_id);
+
+      try {
+        // Fetch chat messages
+        const response = await api.get(`/chats/${chat.chat_id}/messages`);
+        const chatMessages = response.data || [];
+
+        // Transform messages to the format expected by ChatBox
+        const formattedMessages = chatMessages.map(msg => ({
+          id: msg.message_id,
+          role: msg.role,
+          content: msg.content,
+          sources: msg.sources || [],
+          timestamp: msg.timestamp
+        }));
+
+        setMessages(formattedMessages);
+        setCurrentChatId(chat.chat_id);
+        setCurrentChatName(chat.title || 'Chat');
+
+        // Persist to localStorage
+        localStorage.setItem('currentChatId', chat.chat_id);
+        localStorage.setItem('currentChatName', chat.title || 'Chat');
+
+        console.log(`✓ Loaded ${formattedMessages.length} messages from dropdown`);
+      } catch (error) {
+        console.error('Failed to load chat messages:', error);
+      }
+    } else {
+      // Navigate to full chat history page
+      navigate('/chat-history');
+    }
   }, [navigate]);
 
   const handleViewDocument = useCallback(async (doc) => {

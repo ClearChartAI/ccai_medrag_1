@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
-import { MessageSquarePlus, LogOut, Folder, FileText, StickyNote, Clock3, ChevronRight, ChevronLeft } from 'lucide-react'
+import { MessageSquarePlus, LogOut, Folder, FileText, StickyNote, Clock3, ChevronRight, ChevronLeft, ChevronDown, MessageCircle, ArrowRight } from 'lucide-react'
 // Commented out for future use:
 // import { Search, Settings } from 'lucide-react'
 import logo from '../assets/ClearChartAI_Logo_Transparent saturate.png'
+import { auth } from '../config/firebase'
 
 const Sidebar = ({ onNewChat = undefined, onLogout = undefined, onRecords = undefined, onSummaries = undefined, onNotes = undefined, onChatHistory = undefined, user = null }) => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('sidebarCollapsed') === 'true'
   })
+  const [showChatDropdown, setShowChatDropdown] = useState(false)
+  const [chatHistory, setChatHistory] = useState([])
+  const [loadingChats, setLoadingChats] = useState(false)
+  const dropdownRef = useRef(null)
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
   const toggleSidebar = () => {
     setIsCollapsed(prev => {
@@ -18,6 +25,54 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, onRecords = unde
       return newValue
     })
   }
+
+  const fetchChatHistory = async () => {
+    setLoadingChats(true)
+    try {
+      const currentUser = auth.currentUser
+      if (!currentUser) return
+
+      const token = await currentUser.getIdToken()
+      const response = await fetch(`${API_BASE_URL}/chats`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setChatHistory(data)
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error)
+    } finally {
+      setLoadingChats(false)
+    }
+  }
+
+  const toggleChatDropdown = () => {
+    if (!showChatDropdown) {
+      fetchChatHistory()
+    }
+    setShowChatDropdown(prev => !prev)
+  }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowChatDropdown(false)
+      }
+    }
+
+    if (showChatDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showChatDropdown])
 
   return (
     <aside className={`relative flex h-screen flex-col bg-white text-slate-700 border-r border-slate-200 overflow-hidden ${
@@ -103,17 +158,88 @@ const Sidebar = ({ onNewChat = undefined, onLogout = undefined, onRecords = unde
             {!isCollapsed && <span>Notes</span>}
           </button>
 
-          <button
-            type="button"
-            onClick={onChatHistory}
-            className={`flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors ${
-              isCollapsed ? 'justify-center w-full' : 'gap-3 w-full'
-            }`}
-            title={isCollapsed ? 'Chat History' : ''}
-          >
-            <Clock3 size={18} />
-            {!isCollapsed && <span>Chat History</span>}
-          </button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={toggleChatDropdown}
+              className={`flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors ${
+                isCollapsed ? 'justify-center w-full' : 'justify-between w-full'
+              } ${showChatDropdown ? 'bg-slate-100' : ''}`}
+              title={isCollapsed ? 'Chat History' : ''}
+            >
+              <div className={`flex items-center ${isCollapsed ? '' : 'gap-3'}`}>
+                <Clock3 size={18} />
+                {!isCollapsed && <span>Chat History</span>}
+              </div>
+              {!isCollapsed && <ChevronDown size={16} className={`transition-transform ${showChatDropdown ? 'rotate-180' : ''}`} />}
+            </button>
+
+            {/* Dropdown Menu */}
+            {showChatDropdown && !isCollapsed && (
+              <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-96 overflow-hidden flex flex-col">
+                <div className="px-3 py-2 border-b border-slate-200 bg-slate-50">
+                  <p className="text-xs font-semibold text-slate-600 uppercase">Recent Chats</p>
+                </div>
+                <div className="overflow-y-auto flex-1">
+                  {loadingChats ? (
+                    <div className="text-center py-6">
+                      <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-purple-500 border-r-transparent"></div>
+                      <p className="mt-2 text-xs text-slate-500">Loading...</p>
+                    </div>
+                  ) : chatHistory.length === 0 ? (
+                    <div className="text-center py-6 px-4">
+                      <MessageCircle className="mx-auto text-slate-300 mb-2" size={32} />
+                      <p className="text-xs text-slate-500">No chat history yet</p>
+                    </div>
+                  ) : (
+                    <div className="py-1">
+                      {chatHistory.slice(0, 10).map((chat) => (
+                        <button
+                          key={chat.chat_id}
+                          onClick={() => {
+                            setShowChatDropdown(false)
+                            if (onChatHistory) {
+                              // Pass chat data to load in dashboard
+                              onChatHistory(chat)
+                            }
+                          }}
+                          className="w-full text-left px-3 py-2 hover:bg-purple-50 transition-colors group"
+                        >
+                          <div className="flex items-start gap-2">
+                            <MessageCircle className="text-purple-500 mt-0.5 flex-shrink-0" size={14} />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-slate-900 line-clamp-2 mb-0.5">
+                                {chat.title || 'New Chat'}
+                              </p>
+                              <p className="text-xs text-slate-500">
+                                {chat.message_count || 0} messages · {new Date(chat.created_at).toLocaleDateString([], {month: 'short', day: 'numeric'})}
+                              </p>
+                            </div>
+                            <ArrowRight className="text-slate-400 group-hover:text-purple-600 transition-colors flex-shrink-0" size={14} />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {chatHistory.length > 0 && (
+                  <div className="px-3 py-2 border-t border-slate-200 bg-slate-50">
+                    <button
+                      onClick={() => {
+                        setShowChatDropdown(false)
+                        if (onChatHistory) {
+                          onChatHistory()
+                        }
+                      }}
+                      className="w-full text-xs font-medium text-purple-600 hover:text-purple-700 transition"
+                    >
+                      View All Chats →
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Future navigation items commented out */}
