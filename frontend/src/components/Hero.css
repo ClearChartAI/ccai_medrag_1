@@ -201,7 +201,7 @@
     background: linear-gradient(45deg, #5FC4C4, #8d87ba, #764ba2, #5FC4C4);
     background-size: 300% 300%;
     opacity: 0.7;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     z-index: -1;
     animation: rotateGradient 3s linear infinite;
 }
@@ -220,11 +220,15 @@
 
 .btn-secondary:hover::before {
     opacity: 1;
+    background: linear-gradient(45deg, #5FC4C4, #4A9E9E, #5FC4C4);
+    background-size: 300% 300%;
+    animation: none;
 }
 
 .btn-secondary:hover {
+    background: linear-gradient(135deg, #5FC4C4 0%, #4A9E9E 100%);
     transform: translateY(-3px);
-    box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 16px 40px rgba(95, 196, 196, 0.5);
 }
 
 .btn-secondary:active {

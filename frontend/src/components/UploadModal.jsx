@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { UploadCloud, Loader2, X, FileText, Zap, CheckCircle, AlertCircle } from 'lucide-react'
 
 import api from '../utils/api'
+import './UploadModal.css'
+import HIPAARequestForm from './hipaa-form/HIPAARequestForm'
 
 const UploadModal = ({
   isOpen,
@@ -16,6 +18,7 @@ const UploadModal = ({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingStage, setProcessingStage] = useState('') // 'uploading', 'processing', 'complete'
   const [error, setError] = useState('')
+  const [isHIPAAFormOpen, setIsHIPAAFormOpen] = useState(false)
 
   if (!isOpen) return null
 
@@ -101,41 +104,82 @@ const UploadModal = ({
     handleFileSelect(file)
   }
 
+  const handleOpenHIPAAForm = () => {
+    setIsHIPAAFormOpen(true)
+  }
+
+  const handleCloseHIPAAForm = () => {
+    setIsHIPAAFormOpen(false)
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4">
-      <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl border border-teal-100">
+      <div className="w-full max-w-5xl rounded-3xl bg-white p-8 shadow-2xl border border-purple-100">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">Upload Medical Document</h2>
-          <button type="button" onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-teal-50 transition">
-            <X size={18} />
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-teal-600 bg-clip-text text-transparent">Add Your Medical Records</h2>
+          <button type="button" onClick={onClose} className="rounded-full p-2 text-slate-400 hover:bg-purple-50 transition">
+            <X size={20} />
           </button>
         </div>
 
-        <div
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-          className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-teal-300 bg-gradient-to-br from-teal-50 to-cyan-50 px-6 py-12 text-center transition hover:border-teal-400"
-        >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-200 to-cyan-200 mb-2">
-            <UploadCloud className="text-teal-600" size={32} />
+        {/* Split Screen Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left Side - Upload Document */}
+          <div className="flex flex-col">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">Upload a Medical Record</h3>
+            <div
+              onDrop={handleDrop}
+              onDragOver={(e) => e.preventDefault()}
+              className="flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-purple-300 bg-gradient-to-br from-purple-50 to-indigo-50 px-6 py-12 text-center transition hover:border-purple-400 flex-1"
+            >
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 mb-2">
+                <UploadCloud className="text-purple-600" size={32} />
+              </div>
+              <p className="text-sm font-semibold text-slate-700">Drop PDF here or click to browse</p>
+              <p className="text-xs text-slate-500">Only .pdf files are supported</p>
+              <button
+                type="button"
+                onClick={handleBrowseClick}
+                className="btn-animated mt-2"
+              >
+                Browse Files
+              </button>
+            </div>
+            {/* Upload Limits Info */}
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-700">
+              <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium">Upload Requirements:</p>
+                <p className="mt-0.5 opacity-90">Maximum file size: 15MB • Maximum pages: 10</p>
+              </div>
+            </div>
           </div>
-          <p className="text-sm font-semibold text-slate-700">Drop PDF here or click to browse</p>
-          <p className="text-xs text-slate-500">Only .pdf files are supported</p>
-          <button
-            type="button"
-            onClick={handleBrowseClick}
-            className="mt-2 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 px-6 py-2.5 text-sm font-semibold text-white hover:from-teal-500 hover:to-cyan-500 shadow-sm transition"
-          >
-            Browse Files
-          </button>
-        </div>
 
-        {/* Upload Limits Info */}
-        <div className="mt-3 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-700">
-          <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-medium">Upload Requirements:</p>
-            <p className="mt-0.5 opacity-90">Maximum file size: 15MB • Maximum pages: 10</p>
+          {/* Right Side - Get Health Records */}
+          <div className="flex flex-col">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">Let Us Get Your Health Records</h3>
+            <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-teal-300 bg-gradient-to-br from-teal-50 to-cyan-50 px-6 py-12 text-center transition hover:border-teal-400 flex-1">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-200 to-cyan-200 mb-2">
+                <FileText className="text-teal-600" size={32} />
+              </div>
+              <p className="text-sm font-semibold text-slate-700">Connect to your healthcare provider</p>
+              <p className="text-xs text-slate-500">Securely fetch records from your patient portal</p>
+              <button
+                type="button"
+                onClick={handleOpenHIPAAForm}
+                className="btn-animated mt-2"
+              >
+                Get Your Records
+              </button>
+            </div>
+            {/* Info Box */}
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs text-teal-700">
+              <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium">Secure & Private:</p>
+                <p className="mt-0.5 opacity-90">Your data is encrypted and never shared without permission</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -212,6 +256,12 @@ const UploadModal = ({
           onChange={handleFileChange}
         />
       </div>
+
+      {/* HIPAA Request Form Modal */}
+      <HIPAARequestForm
+        isOpen={isHIPAAFormOpen}
+        onClose={handleCloseHIPAAForm}
+      />
     </div>
   )
 }

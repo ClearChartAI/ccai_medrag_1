@@ -1,0 +1,29 @@
+.font-signature {
+  font-family: 'Brush Script MT', cursive, 'Dancing Script', 'Pacifico', serif;
+  font-size: 1.125rem;
+  font-style: italic;
+}
+
+/* Smooth scrolling for the form modal */
+.overflow-y-auto {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(141, 135, 186, 0.5);
+  border-radius: 5px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(141, 135, 186, 0.7);
+}

@@ -5,6 +5,7 @@ import { FileText, Trash2, Eye, AlertCircle, Loader2, ArrowLeft, CheckCircle } f
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
 import { auth } from '../config/firebase';
+import '../components/UploadModal.css';
 
 const getStatusColor = (status) => {
   const normalized = (status || '').toLowerCase();
@@ -185,7 +186,7 @@ export default function RecordsPage() {
             <p className="mb-4 text-sm text-slate-500">Upload your first document to get started</p>
             <button
               onClick={handleBackToDashboard}
-              className="rounded-lg bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 px-4 py-2 text-sm font-semibold text-white hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500"
+              className="btn-animated"
             >
               Go to Dashboard
             </button>
@@ -235,7 +236,7 @@ export default function RecordsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleView(doc)}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition"
+                    className="btn-animated flex flex-1 items-center justify-center gap-2 px-3 py-2 text-sm"
                   >
                     <Eye size={16} />
                     <span>View</span>

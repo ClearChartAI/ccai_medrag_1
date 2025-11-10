@@ -42,7 +42,8 @@ const AboutTimeline = () => {
   return (
     <section className="about-timeline" id="about-section">
       <div className="about-us-header">
-        <h2 className="about-us-title">About Us</h2>
+        <h2 className="about-us-title">Built to Bring Clarity Back to Healthcare</h2>
+        <p className="about-us-subtitle">ClearChartAI was founded on one simple idea, every patient deserves to understand their own story.</p>
       </div>
       <div className="timeline-header fade-in-up" ref={headerRef}>
         <div className="timeline-years-horizontal">

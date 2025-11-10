@@ -9,7 +9,7 @@ const Mission = () => {
   
     },
     {
-      name: 'Dr.Alkhatib, MD',
+      name: 'Dr. Alkhatib, MD',
       role: '“Medicine moves fast, but clarity shouldn’t be left behind. When my patients understand their data, care becomes a partnership, not a mystery"',
       image: 'https://via.placeholder.com/200?text=Dhruv+Suraj'
     },

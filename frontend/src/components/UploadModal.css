@@ -1,0 +1,59 @@
+.btn-animated {
+    background: linear-gradient(135deg, #8d87ba 0%, #6d67a0 100%);
+    color: #fff;
+    border: none;
+    padding: 0.625rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: visible;
+}
+
+.btn-animated::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #5FC4C4, #8d87ba, #764ba2, #5FC4C4);
+    background-size: 300% 300%;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    animation: rotateGradient 3s linear infinite;
+}
+
+@keyframes rotateGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.btn-animated:hover::before {
+    opacity: 1;
+}
+
+.btn-animated:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
+}
+
+.btn-animated:active {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4), 0 0 30px rgba(95, 196, 196, 0.6), 0 0 50px rgba(141, 135, 186, 0.4);
+}

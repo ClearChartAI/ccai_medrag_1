@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, Search, Tag, X, GripVertical, Trash2, Edit2, Save, ArrowLeft } from 'lucide-react'
 import { auth } from '../config/firebase'
+import '../components/UploadModal.css'
 
 const NotesPage = () => {
   const navigate = useNavigate()
@@ -207,7 +208,7 @@ const NotesPage = () => {
             </div>
             <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 via-indigo-500 to-teal-500 px-6 py-3 text-white font-semibold shadow-md hover:from-purple-600 hover:via-indigo-600 hover:to-teal-600 transition transform hover:scale-105"
+              className="btn-animated flex items-center gap-2 px-6 py-3"
             >
               <Plus size={20} />
               New Note
@@ -234,7 +235,7 @@ const NotesPage = () => {
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={createNote}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-teal-500 px-4 py-2 text-white font-semibold hover:from-purple-600 hover:to-teal-600 transition"
+                  className="btn-animated flex items-center gap-2 px-4 py-2"
                 >
                   <Save size={18} />
                   Save Note
@@ -287,7 +288,7 @@ const NotesPage = () => {
                       <div className="flex gap-3 mt-4">
                         <button
                           onClick={() => updateNote(note.note_id)}
-                          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-teal-500 px-4 py-2 text-white font-semibold hover:from-purple-600 hover:to-teal-600 transition"
+                          className="btn-animated flex items-center gap-2 px-4 py-2"
                         >
                           <Save size={18} />
                           Save

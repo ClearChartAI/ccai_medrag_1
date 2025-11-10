@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import api from '../utils/api.js';
 import { auth } from '../config/firebase';
+import '../components/UploadModal.css';
 
 export default function SummariesPage() {
   const { currentUser } = useAuth();
@@ -117,7 +118,7 @@ export default function SummariesPage() {
             </p>
             <button
               onClick={() => navigate('/dashboard')}
-              className="mt-6 rounded-lg bg-gradient-to-r from-purple-400 via-indigo-400 to-teal-400 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:from-purple-500 hover:via-indigo-500 hover:to-teal-500"
+              className="btn-animated mt-6 px-6 py-2.5"
             >
               Go to Dashboard
             </button>
@@ -184,7 +185,7 @@ export default function SummariesPage() {
                   </div>
                   <button
                     onClick={() => handleViewPdf(selectedDoc)}
-                    className="flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 transition"
+                    className="btn-animated flex items-center gap-2 px-4 py-2 text-sm"
                   >
                     <Eye size={16} />
                     <span>View Document</span>

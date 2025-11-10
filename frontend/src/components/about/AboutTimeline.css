@@ -207,8 +207,17 @@
     font-size: 3.5rem;
     font-weight: 700;
     color: #6B7A85;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     letter-spacing: -0.02em;
+}
+
+.about-us-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .timeline-content {
@@ -357,6 +366,14 @@
         padding: 4rem 1.5rem;
     }
 
+    .about-us-title {
+        font-size: 2.5rem;
+    }
+
+    .about-us-subtitle {
+        font-size: 1.1rem;
+    }
+
     .timeline-header {
         margin-bottom: 3rem;
     }
@@ -406,6 +423,14 @@
 }
 
 @media (max-width: 480px) {
+    .about-us-title {
+        font-size: 2rem;
+    }
+
+    .about-us-subtitle {
+        font-size: 1rem;
+    }
+
     .timeline-years {
         justify-content: space-around;
     }
