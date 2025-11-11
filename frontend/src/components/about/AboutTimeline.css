@@ -212,8 +212,8 @@
 }
 
 .about-us-subtitle {
-    font-size: 1.25rem;
-    font-weight: 400;
+    font-size: 1.6rem;
+    font-weight: 700;
     color: #666;
     line-height: 1.6;
     max-width: 800px;
@@ -371,7 +371,7 @@
     }
 
     .about-us-subtitle {
-        font-size: 1.1rem;
+        font-size: 1.35rem;
     }
 
     .timeline-header {
@@ -428,7 +428,7 @@
     }
 
     .about-us-subtitle {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
 
     .timeline-years {

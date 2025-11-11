@@ -1,6 +1,6 @@
 import React from 'react';
 import './FeaturesDetailed.css';
-import privacyProtectionImage from '../../assets/privacy-protection.png';
+import privacyProtectionImage from '../../assets/security 5.png';
 
 const FeaturesDetailed = () => {
   const features = [

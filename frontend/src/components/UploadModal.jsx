@@ -4,7 +4,7 @@ import { UploadCloud, Loader2, X, FileText, Zap, CheckCircle, AlertCircle } from
 
 import api from '../utils/api'
 import './UploadModal.css'
-import HIPAARequestForm from './hipaa-form/HIPAARequestForm'
+// import HIPAARequestForm from './hipaa-form/HIPAARequestForm'
 
 const UploadModal = ({
   isOpen,
@@ -18,7 +18,7 @@ const UploadModal = ({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingStage, setProcessingStage] = useState('') // 'uploading', 'processing', 'complete'
   const [error, setError] = useState('')
-  const [isHIPAAFormOpen, setIsHIPAAFormOpen] = useState(false)
+  // const [isHIPAAFormOpen, setIsHIPAAFormOpen] = useState(false)
 
   if (!isOpen) return null
 
@@ -104,13 +104,13 @@ const UploadModal = ({
     handleFileSelect(file)
   }
 
-  const handleOpenHIPAAForm = () => {
-    setIsHIPAAFormOpen(true)
-  }
+  // const handleOpenHIPAAForm = () => {
+  //   setIsHIPAAFormOpen(true)
+  // }
 
-  const handleCloseHIPAAForm = () => {
-    setIsHIPAAFormOpen(false)
-  }
+  // const handleCloseHIPAAForm = () => {
+  //   setIsHIPAAFormOpen(false)
+  // }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4">
@@ -156,7 +156,7 @@ const UploadModal = ({
           </div>
 
           {/* Right Side - Get Health Records */}
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <h3 className="text-xl font-bold text-slate-800 mb-4">Let Us Get Your Health Records</h3>
             <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-teal-300 bg-gradient-to-br from-teal-50 to-cyan-50 px-6 py-12 text-center transition hover:border-teal-400 flex-1">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-200 to-cyan-200 mb-2">
@@ -173,14 +173,14 @@ const UploadModal = ({
               </button>
             </div>
             {/* Info Box */}
-            <div className="mt-3 flex items-start gap-2 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs text-teal-700">
+            {/* <div className="mt-3 flex items-start gap-2 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs text-teal-700">
               <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium">Secure & Private:</p>
                 <p className="mt-0.5 opacity-90">Your data is encrypted and never shared without permission</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {error && (
@@ -258,10 +258,10 @@ const UploadModal = ({
       </div>
 
       {/* HIPAA Request Form Modal */}
-      <HIPAARequestForm
+      {/* <HIPAARequestForm
         isOpen={isHIPAAFormOpen}
         onClose={handleCloseHIPAAForm}
-      />
+      /> */}
     </div>
   )
 }
